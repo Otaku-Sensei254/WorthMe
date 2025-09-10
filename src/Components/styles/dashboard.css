@@ -1,0 +1,132 @@
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: #0f111a;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 200px;
+  background: #111421;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .logo {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  color: #ffd700;
+}
+
+.sidebar .menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar .menu li {
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.sidebar .menu li.active,
+.sidebar .menu li:hover {
+  color: #ffd700;
+}
+
+/* Middle Content */
+.middle-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.card h4 {
+  margin: 0 0 10px 0;
+  color: #ccc;
+}
+
+.card p {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.charts-placeholder {
+  height: 250px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+}
+
+/* Assets View */
+.assets-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+}
+
+.asset-card {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+/* Right Panel */
+.right-panel {
+  width: 350px;
+  background: #111421;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.right-panel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.right-panel th, .right-panel td {
+  padding: 10px;
+  text-align: left;
+}
+
+.right-panel th {
+  border-bottom: 1px solid #444;
+}
+
+.right-panel tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .right-panel {
+    width: 100%;
+    margin-top: 20px;
+  }
+}

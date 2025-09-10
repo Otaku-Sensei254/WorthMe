@@ -1,0 +1,236 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+/* Navbar container */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  background: var(--darkglass);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 20px auto;
+  position: relative;
+  z-index: 100;
+
+  /* Animation */
+  animation: slideDown 0.6s ease-out;
+}
+
+/* Logo */
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  animation: fadeInLeft 0.8s ease-out;
+}
+
+.logo span {
+  color: var(--orange);
+}
+
+/* Desktop nav links */
+.nav-links {
+  display: flex;
+  gap: 24px;
+  animation: fadeInUp 0.9s ease-out;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--white);
+  font-size: 15px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--orange);
+  transform: translateY(-2px);
+}
+
+/* Desktop auth buttons */
+.auth-buttons {
+  display: flex;
+  gap: 12px;
+  animation: fadeInRight 1s ease-out;
+}
+
+.btn-1,
+.btn-2 {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.btn-1 {
+  background-color: transparent;
+  color: var(--white);
+  border: 1px solid var(--white);
+}
+
+.btn-1:hover {
+  background-color: var(--orange);
+  border-color: transparent;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.btn-2 {
+  background-color: var(--orange);
+  color: #fff;
+  border: none;
+}
+
+.btn-2:hover {
+  background-color: #e55c06;
+  transform: scale(1.05);
+}
+
+/* Hamburger Icon */
+.menu-icon {
+  display: none;
+  color: var(--white);
+  cursor: pointer;
+  z-index: 110;
+  animation: fadeInRight 1s ease-out;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  background: var(--darkglass);
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 16px 16px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  padding: 0 20px;
+
+  /* Animation */
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.35s ease, padding 0.3s ease;
+}
+
+.mobile-menu.open {
+  padding: 20px;
+  max-height: 400px;
+  opacity: 1;
+  animation: fadeInDown 0.5s ease;
+}
+
+.mobile-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-menu nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.mobile-menu nav a:hover {
+  color: var(--orange);
+  transform: translateX(5px);
+}
+
+/* Mobile auth buttons */
+.auth-buttons-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  animation: fadeInUp 0.7s ease-out;
+}
+/* Profile Circle (User Initials) */
+.profile-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-circle:hover {
+  background: #e55c06; /* darker orange */
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ------------------ Animations ------------------ */
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links,
+  .auth-buttons {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+  .mobile-menu {
+    top: 2rem;
+  }
+  .mobile-menu.open {
+    position: absolute;
+    top: 5rem;
+    background-color: rgba(0, 0, 0, 0.726);
+  }
+}

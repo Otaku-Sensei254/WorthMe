@@ -1,0 +1,116 @@
+/* auth.css */
+/*background: #0f111a;*/
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* Auth container */
+.authbox {
+  position: relative;
+  max-width: 400px;
+  margin: 60px auto;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.authbox h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  color: #ffd700; /* gold accent */
+}
+
+/* Inputs */
+.inputs label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.inputs input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1rem;
+  transition: border 0.2s ease;
+}
+
+.inputs input:focus {
+  border: 1px solid #ffd700;
+  outline: none;
+}
+
+/* CTAs */
+.ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.ctas .action {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.ctas .action a {
+  color: #ffd700;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: opacity 0.2s ease;
+}
+
+.ctas .action a:hover {
+  opacity: 0.8;
+}
+
+.authBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #ffd700;
+  color: #0f111a;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.authBtn:hover {
+  background: #e6c200;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .authbox {
+    margin: 30px 20px;
+    padding: 30px 20px;
+  }
+
+  .authbox h2 {
+    font-size: 1.5rem;
+  }
+
+  .inputs input {
+    padding: 9px 10px;
+    font-size: 0.95rem;
+  }
+
+  .authBtn {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+}
