@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": 1767295968858,
+  "timestamp": 1767464442628,
   "workspaceRoot": "/home/dtech/Projects/WorthMe",
   "registries": {
     "components": {
@@ -254,45 +254,676 @@
               ]
             }
           ]
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/config/dev.exs",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/config/prod.exs",
+          []
         ]
       ],
-      "fileHashes": {},
+      "fileHashes": {
+        "/home/dtech/Projects/WorthMe/backend/config/dev.exs": "be500d171e328a23f03655d31eec882edbb109de",
+        "/home/dtech/Projects/WorthMe/backend/config/prod.exs": "78adc90fe5b3fe9aa2184dc66688b3f0a9997b7b"
+      },
       "workspaceRoot": "/home/dtech/Projects/WorthMe"
     },
     "schemas": {
-      "schemas": [],
-      "schemasByFile": [],
-      "fileHashes": {},
+      "schemas": [
+        [
+          "WorthMe.Accounts.User",
+          {
+            "moduleName": "WorthMe.Accounts.User",
+            "tableName": "users",
+            "fields": [
+              {
+                "name": "id",
+                "type": "id"
+              },
+              {
+                "name": "email",
+                "type": "string"
+              },
+              {
+                "name": "password",
+                "type": "string"
+              },
+              {
+                "name": "hashed_password",
+                "type": "string"
+              },
+              {
+                "name": "current_password",
+                "type": "string"
+              },
+              {
+                "name": "confirmed_at",
+                "type": "naive_datetime"
+              },
+              {
+                "name": "first_name",
+                "type": "string"
+              },
+              {
+                "name": "last_name",
+                "type": "string"
+              },
+              {
+                "name": "phone",
+                "type": "string"
+              },
+              {
+                "name": "inserted_at",
+                "type": "naive_datetime"
+              },
+              {
+                "name": "updated_at",
+                "type": "naive_datetime"
+              }
+            ],
+            "associations": {},
+            "associationsDetailed": [],
+            "aliases": {},
+            "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user.ex",
+            "line": 6
+          }
+        ],
+        [
+          "WorthMe.Accounts.UserToken",
+          {
+            "moduleName": "WorthMe.Accounts.UserToken",
+            "tableName": "users_tokens",
+            "fields": [
+              {
+                "name": "id",
+                "type": "id"
+              },
+              {
+                "name": "token",
+                "type": "binary"
+              },
+              {
+                "name": "context",
+                "type": "string"
+              },
+              {
+                "name": "sent_to",
+                "type": "string"
+              },
+              {
+                "name": "user",
+                "type": "assoc",
+                "elixirType": "WorthMe.Accounts.User"
+              },
+              {
+                "name": "inserted_at",
+                "type": "naive_datetime"
+              },
+              {
+                "name": "updated_at",
+                "type": "naive_datetime"
+              }
+            ],
+            "associations": {},
+            "associationsDetailed": [],
+            "aliases": {},
+            "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user_token.ex",
+            "line": 18
+          }
+        ]
+      ],
+      "schemasByFile": [
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user.ex",
+          [
+            {
+              "moduleName": "WorthMe.Accounts.User",
+              "tableName": "users",
+              "fields": [
+                {
+                  "name": "id",
+                  "type": "id"
+                },
+                {
+                  "name": "email",
+                  "type": "string"
+                },
+                {
+                  "name": "password",
+                  "type": "string"
+                },
+                {
+                  "name": "hashed_password",
+                  "type": "string"
+                },
+                {
+                  "name": "current_password",
+                  "type": "string"
+                },
+                {
+                  "name": "confirmed_at",
+                  "type": "naive_datetime"
+                },
+                {
+                  "name": "first_name",
+                  "type": "string"
+                },
+                {
+                  "name": "last_name",
+                  "type": "string"
+                },
+                {
+                  "name": "phone",
+                  "type": "string"
+                },
+                {
+                  "name": "inserted_at",
+                  "type": "naive_datetime"
+                },
+                {
+                  "name": "updated_at",
+                  "type": "naive_datetime"
+                }
+              ],
+              "associations": {},
+              "associationsDetailed": [],
+              "aliases": {},
+              "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user.ex",
+              "line": 6
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user_token.ex",
+          [
+            {
+              "moduleName": "WorthMe.Accounts.UserToken",
+              "tableName": "users_tokens",
+              "fields": [
+                {
+                  "name": "id",
+                  "type": "id"
+                },
+                {
+                  "name": "token",
+                  "type": "binary"
+                },
+                {
+                  "name": "context",
+                  "type": "string"
+                },
+                {
+                  "name": "sent_to",
+                  "type": "string"
+                },
+                {
+                  "name": "user",
+                  "type": "assoc",
+                  "elixirType": "WorthMe.Accounts.User"
+                },
+                {
+                  "name": "inserted_at",
+                  "type": "naive_datetime"
+                },
+                {
+                  "name": "updated_at",
+                  "type": "naive_datetime"
+                }
+              ],
+              "associations": {},
+              "associationsDetailed": [],
+              "aliases": {},
+              "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user_token.ex",
+              "line": 18
+            }
+          ]
+        ]
+      ],
+      "fileHashes": {
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user.ex": "ee66d28289c687ce44ae4c387e36fe29b181c869",
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me/accounts/user_token.ex": "c05393485e057b7677fe3caa373f28575b738533"
+      },
       "workspaceRoot": "/home/dtech/Projects/WorthMe"
     },
     "events": {
-      "events": [],
-      "fileHashes": {},
+      "events": [
+        [
+          "/home/dtech/Projects/WorthMe/backend/config/dev.exs",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/config/prod.exs",
+          []
+        ]
+      ],
+      "fileHashes": {
+        "/home/dtech/Projects/WorthMe/backend/config/dev.exs": "be500d171e328a23f03655d31eec882edbb109de",
+        "/home/dtech/Projects/WorthMe/backend/config/prod.exs": "78adc90fe5b3fe9aa2184dc66688b3f0a9997b7b"
+      },
       "workspaceRoot": "/home/dtech/Projects/WorthMe"
     },
     "routes": {
       "routes": [
         {
+          "verb": "GET",
+          "path": "/api/me",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 25,
+          "controller": "UserController",
+          "action": "show",
+          "helperBase": "me",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "POST",
+          "path": "/api/users/register",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 27,
+          "controller": "UserRegistrationController",
+          "action": "create",
+          "helperBase": "user_register",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "POST",
+          "path": "/api/users/log_in",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 28,
+          "controller": "UserSessionController",
+          "action": "create",
+          "helperBase": "user_log_in",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "DELETE",
+          "path": "/api/users/log_out",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 29,
+          "controller": "UserSessionController",
+          "action": "delete",
+          "helperBase": "user_log_out",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
           "verb": "FORWARD",
           "path": "/dev/mailbox",
           "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 18,
+          "line": 38,
           "forwardTo": "Plug.Swoosh.MailboxPreview",
           "helperBase": "mailbox",
           "params": [],
           "isResource": false,
           "scopePath": "/dev"
+        },
+        {
+          "verb": "GET",
+          "path": "/users/register",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 47,
+          "controller": "UserRegistrationController",
+          "action": "new",
+          "helperBase": "user_register",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "POST",
+          "path": "/users/register",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 48,
+          "controller": "UserRegistrationController",
+          "action": "create",
+          "helperBase": "user_register",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/log_in",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 49,
+          "controller": "UserSessionController",
+          "action": "new",
+          "helperBase": "user_log_in",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "POST",
+          "path": "/users/log_in",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 50,
+          "controller": "UserSessionController",
+          "action": "create",
+          "helperBase": "user_log_in",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/reset_password",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 51,
+          "controller": "UserResetPasswordController",
+          "action": "new",
+          "helperBase": "user_reset_password",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "POST",
+          "path": "/users/reset_password",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 52,
+          "controller": "UserResetPasswordController",
+          "action": "create",
+          "helperBase": "user_reset_password",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/reset_password/:token",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 53,
+          "controller": "UserResetPasswordController",
+          "action": "edit",
+          "helperBase": "user_reset_password",
+          "params": [
+            "token"
+          ],
+          "isResource": false
+        },
+        {
+          "verb": "PUT",
+          "path": "/users/reset_password/:token",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 54,
+          "controller": "UserResetPasswordController",
+          "action": "update",
+          "helperBase": "user_reset_password",
+          "params": [
+            "token"
+          ],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/settings",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 60,
+          "controller": "UserSettingsController",
+          "action": "edit",
+          "helperBase": "user_setting",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "PUT",
+          "path": "/users/settings",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 61,
+          "controller": "UserSettingsController",
+          "action": "update",
+          "helperBase": "user_setting",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/settings/confirm_email/:token",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 62,
+          "controller": "UserSettingsController",
+          "action": "confirm_email",
+          "helperBase": "user_setting_confirm_email",
+          "params": [
+            "token"
+          ],
+          "isResource": false
+        },
+        {
+          "verb": "DELETE",
+          "path": "/users/log_out",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 68,
+          "controller": "UserSessionController",
+          "action": "delete",
+          "helperBase": "user_log_out",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/confirm",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 69,
+          "controller": "UserConfirmationController",
+          "action": "new",
+          "helperBase": "user_confirm",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "POST",
+          "path": "/users/confirm",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 70,
+          "controller": "UserConfirmationController",
+          "action": "create",
+          "helperBase": "user_confirm",
+          "params": [],
+          "isResource": false
+        },
+        {
+          "verb": "GET",
+          "path": "/users/confirm/:token",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 71,
+          "controller": "UserConfirmationController",
+          "action": "edit",
+          "helperBase": "user_confirm",
+          "params": [
+            "token"
+          ],
+          "isResource": false
+        },
+        {
+          "verb": "POST",
+          "path": "/users/confirm/:token",
+          "filePath": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 72,
+          "controller": "UserConfirmationController",
+          "action": "update",
+          "helperBase": "user_confirm",
+          "params": [
+            "token"
+          ],
+          "isResource": false
         }
       ],
       "fileHashes": {
-        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex": "03300eecd48ad60653fafe3d950e9ad4f619997c"
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/router.ex": "951b87ce535f657bdca94c979954e421450ac36f"
       },
       "workspaceRoot": "/home/dtech/Projects/WorthMe"
     },
     "controllers": {
-      "rendersByFile": [],
+      "rendersByFile": [
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_confirmation_controller.ex",
+          [
+            {
+              "controllerModule": "WorthMeWeb.UserConfirmationController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_confirmation_controller.ex",
+              "action": "new",
+              "templateName": "new",
+              "assigns": [],
+              "assignsWithTypes": [],
+              "line": 7
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserConfirmationController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_confirmation_controller.ex",
+              "action": "edit",
+              "templateName": "edit",
+              "assigns": [
+                "token"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "token",
+                  "variableName": "token"
+                }
+              ],
+              "line": 28
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex",
+          [
+            {
+              "controllerModule": "WorthMeWeb.UserSettingsController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex",
+              "action": "edit",
+              "templateName": "edit",
+              "assigns": [],
+              "assignsWithTypes": [],
+              "line": 10
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserSettingsController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex",
+              "action": "update",
+              "templateName": "edit",
+              "assigns": [
+                "email_changeset"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "email_changeset",
+                  "variableName": "changeset"
+                }
+              ],
+              "line": 33
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserSettingsController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex",
+              "action": "update",
+              "templateName": "edit",
+              "assigns": [
+                "password_changeset"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "password_changeset",
+                  "variableName": "changeset"
+                }
+              ],
+              "line": 49
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_reset_password_controller.ex",
+          [
+            {
+              "controllerModule": "WorthMeWeb.UserResetPasswordController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_reset_password_controller.ex",
+              "action": "new",
+              "templateName": "new",
+              "assigns": [],
+              "assignsWithTypes": [],
+              "line": 9
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserResetPasswordController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_reset_password_controller.ex",
+              "action": "edit",
+              "templateName": "edit",
+              "assigns": [
+                "changeset"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "changeset",
+                  "variableName": "(expr)"
+                }
+              ],
+              "line": 29
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserResetPasswordController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_reset_password_controller.ex",
+              "action": "update",
+              "templateName": "edit",
+              "assigns": [
+                "changeset"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "changeset",
+                  "variableName": "changeset"
+                }
+              ],
+              "line": 42
+            }
+          ]
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_controller.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex",
+          [
+            {
+              "controllerModule": "WorthMeWeb.UserRegistrationController",
+              "controllerFile": "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex",
+              "action": "new",
+              "templateName": "new",
+              "assigns": [
+                "changeset"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "changeset",
+                  "variableName": "changeset"
+                }
+              ],
+              "line": 12
+            }
+          ]
+        ]
+      ],
       "templateSummaries": [],
-      "fileHashes": {},
+      "fileHashes": {
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_confirmation_controller.ex": "376132e56fae6614b58e4c3306e7f4aec298daa9",
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex": "4004276399784adffef31ebe7706c1f4025293c3",
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex": "e7932e946f42e709a2ac672254cf0892edaf1048",
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_reset_password_controller.ex": "9a4a176e787f2201fbdd6e84926536d829302c60",
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_controller.ex": "787a90c67bcd66092a76107b2f3d1bab8c7b4586",
+        "/home/dtech/Projects/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex": "ae86a2e322830476f59da3cb8fc77211b7c6df6c"
+      },
       "workspaceRoot": "/home/dtech/Projects/WorthMe"
     },
     "templates": {

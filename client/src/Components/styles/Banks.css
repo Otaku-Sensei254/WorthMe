@@ -1,0 +1,119 @@
+.banks-wrapper {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.banks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.banks-header h1 { font-size: 28px; margin: 0 0 8px 0; color: #0f172a; }
+.banks-header p { color: #64748b; margin: 0; }
+
+.banks-search {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.banks-search input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  outline: none;
+  background: white;
+  transition: border 0.2s;
+}
+
+.banks-search input:focus { border-color: #2db742; }
+.banks-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+
+/* Grid Layout */
+.banks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Card Styling */
+.bank-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
+}
+
+.bank-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.1);
+  border-color: var(--brand-color);
+}
+
+.bank-card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bank-icon-hex {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.bank-info h3 { margin: 0; font-size: 18px; color: #1e293b; }
+.bank-info span { font-size: 13px; color: #64748b; font-weight: 500; }
+
+/* Button Styling */
+.link-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.link-btn:hover:not(:disabled) {
+  background: var(--brand-color);
+  color: white;
+  border-color: var(--brand-color);
+}
+
+.link-btn.linked {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+  cursor: default;
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .banks-header { flex-direction: column; align-items: flex-start; }
+  .banks-search { max-width: 100%; }
+  .banks-grid { grid-template-columns: 1fr; }
+}

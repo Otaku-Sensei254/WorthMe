@@ -9,11 +9,12 @@ import Register from "./Components/Pages/Register";
 import Dashboard from "./Components/Pages/Dashboard";
 import Login from "./Components/Pages/Login";
 import Navbar from "./Components/Navbar/Navbar";
-
+import BankConnect from "./banks/BankConnect";
 // Context & Protection
 import { UserProvider } from "./context/userContext";
 import ProtectedRoute from "./Components/ProtectedRoutes";
 import Mpesa from "./Components/Parsers/Mpesa";
+import Banks from "./banks/Banks";
 
 /**
  * Layout component to wrap pages with a persistent Navbar
@@ -56,6 +57,19 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      // ADD THIS NEW ROUTE:
+      {
+        path: "banks/connect/:bankId",
+        element: (
+          <ProtectedRoute>
+            <BankConnect />
+          </ProtectedRoute>
+        ),
+      },
+      {
+       path: "/banks",
+       element: <Banks />,
+     },
     ],
   },
   {
