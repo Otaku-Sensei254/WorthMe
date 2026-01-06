@@ -21,7 +21,7 @@ const Mpesa = () => {
         formData.append('password', password);
 
         try {
-            const response = await fetch('http://localhost:5000/upload', {
+            const response = await fetch('http://localhost:5000/api/parse/mpesa', {
                 method: 'POST',
                 body: formData,
             });

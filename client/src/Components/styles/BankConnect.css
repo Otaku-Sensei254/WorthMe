@@ -1,152 +1,213 @@
-.connect-page-wrapper {
-  max-width: 550px;
-  margin: 40px auto;
-  padding: 0 20px;
+.bc-page { background: #f8fcf9; min-height: 100vh; padding: 20px; font-family: 'Inter', sans-serif; }
+.bc-nav { max-width: 1500px; margin: 0 auto 20px; }
+.bc-back-btn { background: none; border: none; display: flex; align-items: center; gap: 8px; color: #64748b; font-weight: 600; cursor: pointer; }
+
+/* LAYOUT ENGINE */
+.bc-layout {
+    display: flex;
+    gap: 30px;
+    max-width: 1500px;
+    margin: 0 auto;
+    align-items: flex-start;
 }
 
-.back-link {
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #64748b;
-  font-weight: 500;
-  cursor: pointer;
-  margin-bottom: 20px;
-  transition: color 0.2s;
+/* SIDEBAR CARD */
+.bc-sidebar { flex: 0 0 380px; }
+.bc-sticky-card {
+    background: white; border-radius: 20px; border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04); overflow: hidden;
+    position: sticky; top: 20px;
 }
 
-.back-link:hover { color: #1e293b; }
+.bc-card-header { padding: 30px 20px; text-align: center; }
+.bc-bank-icon { width: 50px; height: 50px; border-radius: 12px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; }
+.bc-card-header h2 { margin: 0; font-size: 20px; }
+.bc-card-header p { color: #64748b; font-size: 13px; margin: 5px 0 0; }
 
-.connect-container {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+/* TABS */
+.bc-tabs { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; margin: 0 20px 20px; }
+.bc-tabs button { flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; color: #64748b; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.bc-tabs button.active { background: white; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+/* FORM */
+.bc-form { padding: 0 20px 20px; }
+.bc-field { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
+.bc-field label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; }
+.bc-field input { padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; outline: none; width: 100%; box-sizing: border-box; }
+
+.bc-upload-zone { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 30px 10px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; }
+.bc-upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.bc-upload-zone span { font-size: 14px; color: #64748b; font-weight: 500; }
+
+.bc-submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.bc-err { color: #ef4444; font-size: 12px; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+.bc-footer-note { padding: 15px; text-align: center; font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid #f8fafc; display: flex; align-items: center; justify-content: center; gap: 4px; }
+
+/* MAIN CONTENT (TABLE) */
+.bc-main { flex: 1; min-width: 0; }
+.bc-results-card { background: white; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; }
+
+.bc-results-header { padding: 20px 25px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+.bc-results-header h3 { margin: 0; font-size: 18px; }
+.bc-info p { margin: 0; font-size: 12px; color: #64748b; }
+
+.bc-search { position: relative; width: 100%; max-width: 300px; }
+.bc-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.bc-search input { width: 100%; padding: 10px 10px 10px 40px; border: 1px solid #e2e8f0; border-radius: 20px; outline: none; }
+
+/* TABLE FIX: FULL STRETCH */
+.bc-table-container { width: 100%; overflow-x: auto; background: white; }
+.bc-table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+
+.bc-table th { background: #f8fafc; padding: 16px 20px; text-align: left; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; white-space: nowrap; }
+.bc-table td { padding: 16px 20px; border-bottom: 1px solid #f8fafc; font-size: 14px; color: #1e293b; white-space: nowrap; }
+
+/* Narrative column wrapping */
+.bc-table td:nth-child(3) { white-space: normal; min-width: 300px; color: #475569; line-height: 1.5; }
+
+.amt-pos { color: #10b981; font-weight: 700; text-align: right; }
+.amt-neg { color: #ef4444; font-weight: 700; text-align: right; }
+
+.bc-empty { padding: 120px 20px; text-align: center; color: #cbd5e1; }
+.bc-empty h3 { color: #64748b; margin: 20px 0 5px; }
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 1100px) {
+    .bc-layout { flex-direction: column; }
+    .bc-sidebar { width: 100%; flex: none; }
+    .bc-sticky-card { position: static; }
 }
 
-.connect-header {
-  padding: 40px 20px;
-  text-align: center;
-  background: #f8fafc;
-}
-
-.bank-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  margin: 0 auto 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 28px;
-  font-weight: 800;
-}
-
-.connect-header h1 { font-size: 24px; margin: 0 0 8px 0; color: #0f172a; }
-.connect-header p { color: #64748b; font-size: 14px; margin: 0; }
-
-.method-tabs {
-  display: flex;
-  background: #f1f5f9;
-  padding: 6px;
-  margin: 0 30px;
-  border-radius: 12px;
-}
-
-.method-tabs button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: none;
-  color: #64748b;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s;
-}
-
-.method-tabs button.active {
-  background: white;
-  color: #0f172a;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-}
-
-.connect-content { padding: 30px; }
-
-.form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-.form-group label { font-size: 13px; font-weight: 600; color: #475569; }
-.form-group input {
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  outline: none;
-  transition: border 0.2s;
-}
-
-.connect-btn {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.upload-box {
-  border: 2px dashed #e2e8f0;
-  border-radius: 15px;
-  padding: 40px 20px;
-  text-align: center;
-  position: relative;
-}
-
-.file-overlay {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.security-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 15px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.connect-footer {
-  padding: 20px 30px;
-  background: #fffbeb;
-  display: flex;
-  gap: 12px;
-  border-top: 1px solid #fef3c7;
-}
-
-.connect-footer p { font-size: 12px; color: #92400e; margin: 0; line-height: 1.5; }
-
-.spin { animation: spin 1s linear infinite; }
+.bc-spin { animation: spin 1s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-@media (max-width: 600px) {
-  .connect-page-wrapper { margin: 20px auto; }
-  .method-tabs { margin: 0 15px; }
-  .connect-content { padding: 20px; }
+/* Update these parts in your BankConnect.css */
+
+.bc-table-container {
+    width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling for 7 columns */
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.bc-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px; /* Forces a minimum width to keep columns readable */
+    
+}
+
+.bc-table th, .bc-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 13px;
+    white-space: nowrap; /* Keeps dates and numbers on one line */
+}
+
+/* Specific rule for the Narrative column to wrap text instead of stretching */
+.bc-table td:last-child {
+    white-space: normal;
+    min-width: 250px;
+    max-width: 400px;
+}
+/* --- COMPREHENSIVE RESPONSIVENESS --- */
+
+/* 1. Tablet & Small Laptops (under 1024px) */
+@media (max-width: 1024px) {
+    .bc-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .bc-sidebar {
+        flex: none;
+        width: 100%;
+    }
+
+    .bc-sticky-card {
+        position: static; /* Disable sticky so user can scroll to results */
+    }
+
+    .bc-main {
+        width: 100%;
+    }
+}
+
+/* 2. Standard Tablets & Large Phones (under 768px) */
+@media (max-width: 768px) {
+    .bc-page {
+        padding: 12px;
+    }
+
+    .bc-results-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+    }
+
+    .bc-search {
+        max-width: none; /* Search takes full width on mobile */
+    }
+
+    .bc-results-header h3 {
+        font-size: 16px;
+    }
+
+    .bc-card-header {
+        padding: 20px 15px;
+    }
+}
+
+/* 3. Small Phones (under 480px) */
+@media (max-width: 480px) {
+    .bc-tabs {
+        margin: 0 10px 15px;
+    }
+
+    .bc-tabs button {
+        font-size: 12px;
+        padding: 8px;
+        gap: 4px;
+    }
+
+    .bc-tabs button svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .bc-form {
+        padding: 0 15px 15px;
+    }
+
+    .bc-submit-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* Adjust table font for small screens to fit more data */
+    .bc-table th, .bc-table td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .bc-empty {
+        padding: 60px 20px;
+    }
+}
+
+/* --- UTILITY FIXES FOR TOUCH DEVICES --- */
+
+/* Add a subtle indicator that the table is scrollable */
+.bc-table-container {
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    position: relative;
+    background: linear-gradient(to right, white 30%, rgba(255,255,255,0)), 
+                linear-gradient(to right, rgba(255,255,255,0), white 70%) 0 100%, 
+                radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.2), rgba(0,0,0,0)), 
+                radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
 }
