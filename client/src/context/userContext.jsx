@@ -3,7 +3,14 @@ import React, { createContext, useState, useEffect } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const cached = localStorage.getItem("user");
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true); // Added loading state
 
   const fetchUser = async () => {
@@ -24,11 +31,13 @@ export const UserProvider = ({ children }) => {
 
       const data = await res.json();
       // Phoenix returns the user object directly based on our UserController
-      setUser(data); 
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
       console.log("User session verified:", data);
     } catch (err) {
       console.log("No active session found.");
       setUser(null);
+      localStorage.removeItem("user");
     } finally {
       setLoading(false);
     }

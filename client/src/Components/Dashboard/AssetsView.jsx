@@ -1,23 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
+import { WealthContext } from "../../context/wealthContext";
 import "../styles/dashboard.css";
 
 const AssetsView = () => {
-  const assets = [
-    { name: "CO-OP", balance: "$3,500" },
-    { name: "KCB", balance: "$4,200" },
-    { name: "I&M", balance: "$2,750" },
-    { name: "M-PESA", balance: "$1,800" },
-    { name: "Airtel Money", balance: "$950" },
-  ];
+  const { trackedWallets, totalWorth } = useContext(WealthContext);
 
   return (
     <div className="assets-view">
-      <h3>Connected Accounts & Wallets</h3>
+      <div className="assets-header">
+        <h3>Connected Accounts & Wallets</h3>
+        <p>Current worth is loaded from your parsed statement summaries.</p>
+      </div>
+      <div className="assets-total">
+        <span>Tracked Worth</span>
+        <strong>Ksh {totalWorth}</strong>
+      </div>
       <div className="assets-container">
-        {assets.map((asset, index) => (
-          <div className="asset-card" key={index}>
+        {trackedWallets.map((asset) => (
+          <div className="asset-card" key={asset.key} style={{ borderTop: `4px solid ${asset.accent}` }}>
             <h4>{asset.name}</h4>
-            <p>{asset.balance}</p>
+            <p>Ksh {asset.worth}</p>
+            <span>{asset.customerName || "No name captured yet"}</span>
+            <small>{asset.statementPeriod || "No statement period captured"}</small>
           </div>
         ))}
       </div>

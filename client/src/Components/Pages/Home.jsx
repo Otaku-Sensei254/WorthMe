@@ -46,11 +46,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
+      
+      {/* <section className="cta-section">
         <h2>Take Control of Your Wealth Today</h2>
         <button className="btn-primary">Sign Up Free</button>
-      </section>
+      </section> */}
     </div>
   );
 };

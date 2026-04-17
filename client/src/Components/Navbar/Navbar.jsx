@@ -62,7 +62,9 @@ const Navbar = () => {
           <>
             {user ? (
               <>
-                <div className="profile-circle">{getInitials()}</div>
+                <Link to="/profile" className="profile-link" aria-label="Open profile">
+                  <div className="profile-circle">{getInitials()}</div>
+                </Link>
                 <button className="btn-1" onClick={handleLogout}>
                   Logout
                 </button>
@@ -105,7 +107,9 @@ const Navbar = () => {
             <>
               {user ? (
                 <>
-                  <div className="profile-circle">{getInitials()}</div>
+                  <Link to="/profile" className="profile-link" onClick={toggleMenu}>
+                    <div className="profile-circle">{getInitials()}</div>
+                  </Link>
                   <button
                     className="btn-1"
                     onClick={() => {

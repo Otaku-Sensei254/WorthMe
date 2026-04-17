@@ -1,36 +1,37 @@
-import React from "react";
+import React, { useContext } from "react";
+import { WealthContext } from "../../context/wealthContext";
 import "../styles/dashboard.css";
 
 const RightPanel = () => {
-  const transactions = [
-    { date: "2025-09-10", description: "M-PESA payment", amount: 500, account: "M-PESA" },
-    { date: "2025-09-09", description: "CO-OP deposit", amount: 2000, account: "CO-OP" },
-    { date: "2025-09-08", description: "KCB withdrawal", amount: -1500, account: "KCB" },
-  ];
+  const { recentTransactions } = useContext(WealthContext);
 
   return (
     <div className="right-panel">
       <h3>Recent Transactions</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Account</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.map((tx, index) => (
-            <tr key={index}>
-              <td>{tx.date}</td>
-              <td>{tx.description}</td>
-              <td>{tx.amount}</td>
-              <td>{tx.account}</td>
+      {recentTransactions.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Description</th>
+              <th>Amount</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {recentTransactions.map((tx, index) => (
+              <tr key={index}>
+                <td>{tx.provider}</td>
+                <td>{tx.label}</td>
+                <td>{tx.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="empty-state">
+          Upload an M-Pesa or Airtel statement to populate this panel with real transactions.
+        </p>
+      )}
     </div>
   );
 };

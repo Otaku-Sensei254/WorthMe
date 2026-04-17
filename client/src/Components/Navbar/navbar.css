@@ -167,6 +167,12 @@ body {
   animation: fadeInUp 0.7s ease-out;
 }
 /* Profile Circle (User Initials) */
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .profile-circle {
   width: 36px;
   height: 36px;

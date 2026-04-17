@@ -1,16 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet } from 'lucide-react';
 import '../styles/Mpesa.css';
+import { WealthContext } from '../../context/wealthContext';
 
 const Mpesa = () => {
     const [file, setFile] = useState(null);
     const [password, setPassword] = useState('');
     const [transactions, setTransactions] = useState(null);
     const [summary, setSummary] = useState(null);
-    const [debugCustomerName, setDebugCustomerName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const { saveWalletSnapshot } = useContext(WealthContext);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -19,7 +20,6 @@ const Mpesa = () => {
         setLoading(true);
         setError(null);
         setSummary(null);
-        setDebugCustomerName('');
         const formData = new FormData();
         formData.append('statement', file);
         formData.append('password', password);
@@ -34,7 +34,18 @@ const Mpesa = () => {
             if (result.success) {
                 setTransactions(result.transactions);
                 setSummary(result.summary || null);
-                setDebugCustomerName(result.debugCustomerName || '');
+                saveWalletSnapshot('mpesa', {
+                    provider: 'M-Pesa',
+                    label: 'M-Pesa Wallet',
+                    worth: result.summary?.currentBalance || '0.00',
+                    balance: result.summary?.currentBalance || '0.00',
+                    summary: result.summary || null,
+                    transactions: result.transactions || [],
+                    customerName: result.summary?.customerName || result.debugCustomerName || '',
+                    mobileNumber: result.summary?.mobileNumber || '',
+                    statementPeriod: result.summary?.statementPeriod || '',
+                    requestDate: result.summary?.requestDate || '',
+                });
             } else {
                 setError(result.error || 'Failed to parse statement. Please check the password.');
             }

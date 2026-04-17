@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo } from 'lucide-react';
 import '../styles/Airtel.css';
+import { WealthContext } from '../../context/wealthContext';
 
 const Airtel = () => {
     const [file, setFile] = useState(null);
@@ -9,6 +10,7 @@ const Airtel = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const { saveWalletSnapshot } = useContext(WealthContext);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -30,6 +32,17 @@ const Airtel = () => {
             if (result.success) {
                 setTransactions(result.transactions);
                 setSummary(result.summary || null);
+                saveWalletSnapshot('airtel', {
+                    provider: 'Airtel Money',
+                    label: 'Airtel Wallet',
+                    worth: result.summary?.closingBalance || '0.00',
+                    balance: result.summary?.closingBalance || '0.00',
+                    summary: result.summary || null,
+                    transactions: result.transactions || [],
+                    customerName: result.summary?.customerName || '',
+                    statementPeriod: result.summary?.statementPeriod || '',
+                    requestDate: result.summary?.requestDate || '',
+                });
             } else {
                 setError(result.error || 'Failed to parse Airtel statement.');
             }

@@ -10,8 +10,12 @@ import Dashboard from "./Components/Pages/Dashboard";
 import Login from "./Components/Pages/Login";
 import Navbar from "./Components/Navbar/Navbar";
 import BankConnect from "./banks/BankConnect";
+import Profile from "./Components/Pages/Profile";
+import About from "./Components/Pages/About";
+import Features from "./Components/Pages/Features";
 // Context & Protection
 import { UserProvider } from "./context/userContext";
+import { WealthProvider } from "./context/wealthContext";
 import ProtectedRoute from "./Components/ProtectedRoutes";
 import Mpesa from "./Components/Parsers/Mpesa";
 import Airtel from "./Components/Parsers/Airtel";
@@ -41,6 +45,14 @@ const router = createBrowserRouter([
       {
         index: true, // This acts as the default "/" path
         element: <Home />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "features",
+        element: <Features />,
       },
       {
         path: "dashboard",
@@ -79,6 +91,14 @@ const router = createBrowserRouter([
        path: "/banks",
        element: <Banks />,
      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   {
@@ -95,10 +115,12 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <UserProvider>
-      {/* The RouterProvider provides the "Router Context" 
-        needed by ProtectedRoute and Navigate 
-      */}
-      <RouterProvider router={router} />
+      <WealthProvider>
+        {/* The RouterProvider provides the "Router Context"
+          needed by ProtectedRoute and Navigate
+        */}
+        <RouterProvider router={router} />
+      </WealthProvider>
     </UserProvider>
   </React.StrictMode>
 );
