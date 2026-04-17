@@ -8,9 +8,7 @@ const bankDetails = {
     im: { name: 'I&M Bank', color: '#00339f' },
     mpesa: { name: 'M-Pesa', color: '#2db742' },
     kcb: { name: 'KCB Bank', color: '#7cc142' },
-    equity: { name: 'Equity Bank', color: '#ad500f' },
-    airtel: { name: 'Airtel Money', color: 'red' },
-    coop: { name: 'Cooperative Bank', color: '#052b0d' }
+    equity: { name: 'Equity Bank', color: '#ad500f' }
 };
 
 // Helper to generate a human-friendly label from a camelCase key

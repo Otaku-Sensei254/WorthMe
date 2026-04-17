@@ -95,6 +95,97 @@ body {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
+.mpesa-summary-panel {
+  margin: 16px;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eefbf0 0%, #ffffff 55%, #f8fffa 100%);
+  border: 1px solid rgba(45, 183, 66, 0.12);
+  box-shadow: 0 16px 35px rgba(45, 183, 66, 0.08);
+}
+
+.mpesa-summary-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  
+}
+
+.mpesa-summary-pill {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(45, 183, 66, 0.08);
+  color: var(--mpesa-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.mpesa-summary-value {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.mpesa-summary-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.mpesa-summary-meta span {
+  color: #64748b;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+.mpesa-summary-breakdown {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.mpesa-summary-table-wrap {
+  overflow-x: auto;
+}
+
+.mpesa-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.mpesa-summary-table th {
+  background: #f8fafc;
+  color: #64748b;
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(226, 232, 240, 0.95);
+  white-space: nowrap;
+}
+
+.mpesa-summary-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.mpesa-summary-table tr.is-total td {
+  font-weight: 800;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
 .mpesa-table-header {
   padding: 15px;
   background: #ffffff;
@@ -195,6 +286,20 @@ body {
   .mpesa-table-header {
     flex-direction: column; /* Stack Title and Search */
     align-items: flex-start;
+  }
+
+  .mpesa-summary-panel {
+    margin: 12px;
+    padding: 14px;
+  }
+
+  .mpesa-summary-value {
+    font-size: 28px;
+  }
+
+  .mpesa-summary-table th,
+  .mpesa-summary-table td {
+    padding: 10px 8px;
   }
 
   .mpesa-search-box {

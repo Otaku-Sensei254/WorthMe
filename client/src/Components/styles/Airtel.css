@@ -1,0 +1,366 @@
+:root {
+  --airtel-primary: #e60000;
+  --airtel-hover: #b30000;
+  --airtel-bg: #fff5f5;
+  --airtel-border: #ffd6d6;
+  --airtel-text: #1e293b;
+  --airtel-green: #22c55e;
+}
+
+body {
+  background-color: var(--airtel-bg);
+  margin: 0;
+  padding: 0;
+}
+
+.airtel-wrapper {
+  max-width: 1250px;
+  margin: 20px auto;
+  padding: 0 15px;
+  color: var(--airtel-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.airtel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.airtel-header h1 { font-size: 20px; margin: 0; }
+.airtel-header h1 span { color: var(--airtel-primary); }
+
+.airtel-icon-box {
+  background-color: var(--airtel-primary);
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+}
+
+/* Card Styling */
+.airtel-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--airtel-border);
+  margin-bottom: 20px;
+}
+
+.airtel-upload-grid {
+  display: grid;
+  grid-template-columns: 2fr auto;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.airtel-input-group { display: flex; flex-direction: column; gap: 6px; }
+.airtel-input-group label { font-size: 12px; font-weight: 600; color: #64748b; }
+
+.airtel-file-input {
+  padding: 10px;
+  border: 1px solid var(--airtel-border);
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.airtel-file-input:focus { border-color: var(--airtel-primary); }
+
+.airtel-parse-btn {
+  background-color: var(--airtel-primary);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.airtel-parse-btn:hover {
+  background-color: var(--airtel-hover);
+}
+
+.airtel-parse-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Table Section */
+.airtel-table-container {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--airtel-border);
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.airtel-summary-panel {
+  margin: 16px;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff1f1 0%, #ffffff 55%, #fff8f8 100%);
+  border: 1px solid rgba(230, 0, 0, 0.12);
+  box-shadow: 0 16px 35px rgba(230, 0, 0, 0.08);
+}
+
+.airtel-summary-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.airtel-summary-pill {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(230, 0, 0, 0.08);
+  color: var(--airtel-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.airtel-summary-value {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.airtel-summary-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.airtel-summary-meta span {
+  color: #64748b;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+.airtel-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.airtel-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 214, 214, 0.9);
+}
+
+.airtel-summary-card svg {
+  color: var(--airtel-primary);
+}
+
+.airtel-summary-card span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.airtel-summary-card strong {
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.airtel-table-header {
+  padding: 15px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--airtel-border);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.airtel-search-box {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+}
+
+.airtel-search-box .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.airtel-search-box input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid var(--airtel-border);
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.airtel-search-box input:focus {
+  border-color: var(--airtel-primary);
+}
+
+.airtel-statement-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.airtel-statement-table th {
+  background-color: #fef2f2;
+  color: #64748b;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--airtel-border);
+}
+
+.airtel-statement-table td {
+  padding: 15px;
+  border-bottom: 1px solid var(--airtel-border);
+}
+
+.airtel-row-hover:hover { background-color: #fef2f2; }
+
+.airtel-tx-id-cell { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #0f172a; }
+.airtel-date-cell { white-space: nowrap; color: #64748b; }
+.airtel-details-cell { max-width: 400px; }
+.airtel-tx-desc { line-height: 1.4; }
+
+.airtel-status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.airtel-status-badge.successful {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.airtel-amt-in { color: var(--airtel-green); font-weight: 700; }
+.airtel-amt-out { color: var(--airtel-primary); font-weight: 700; }
+.airtel-balance-cell { font-weight: 800; color: #0f172a; }
+.airtel-text-right { text-align: right; }
+
+.airtel-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.airtel-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--airtel-primary);
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Mobile Responsiveness (Below 768px) */
+@media (max-width: 768px) {
+  .airtel-wrapper { margin: 15px auto; }
+  
+  .airtel-upload-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .airtel-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .airtel-summary-panel {
+    margin: 12px;
+    padding: 14px;
+  }
+
+  .airtel-summary-value {
+    font-size: 28px;
+  }
+
+  .airtel-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .airtel-search-box {
+    max-width: 100%;
+  }
+
+  /* Transform table into cards */
+  .airtel-statement-table thead {
+    display: none;
+  }
+
+  .airtel-statement-table, 
+  .airtel-statement-table tbody, 
+  .airtel-statement-table tr, 
+  .airtel-statement-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .airtel-statement-table tr {
+    margin-bottom: 15px;
+    border: 1px solid var(--airtel-border);
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+  }
+
+  .airtel-statement-table td {
+    text-align: left !important;
+    padding: 8px 10px;
+    border-bottom: 1px dashed #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .airtel-statement-table td:last-child { border-bottom: none; }
+
+  /* Add Labels before data on Mobile */
+  .airtel-statement-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #64748b;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .airtel-details-cell { max-width: 100%; }
+  .airtel-tx-desc { text-align: right; font-size: 13px; max-width: 60%; }
+}

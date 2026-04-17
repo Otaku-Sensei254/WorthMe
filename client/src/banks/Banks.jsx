@@ -23,6 +23,8 @@ const Banks = () => {
     const handleNavigation = (id) => {
         if (id === 'mpesa') {
             navigate('/mpesa'); // Goes to your specialized M-Pesa page
+        } else if (id === 'airtel') {
+            navigate('/airtel'); // Goes to your specialized Airtel Money page
         } else {
             navigate(`/banks/connect/${id}`); // Goes to the Dynamic Connector
         }

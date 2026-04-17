@@ -14,6 +14,7 @@ import BankConnect from "./banks/BankConnect";
 import { UserProvider } from "./context/userContext";
 import ProtectedRoute from "./Components/ProtectedRoutes";
 import Mpesa from "./Components/Parsers/Mpesa";
+import Airtel from "./Components/Parsers/Airtel";
 import Banks from "./banks/Banks";
 
 /**
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Mpesa />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "airtel",
+        element: (
+          <ProtectedRoute>
+            <Airtel />
           </ProtectedRoute>
         ),
       },

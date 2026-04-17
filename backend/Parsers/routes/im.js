@@ -11,9 +11,12 @@ const upload = multer({ storage: multer.memoryStorage() });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Corrected IS_DATE regex
 const IS_DATE = (text) => /^\d{2}-\d{2}-\d{2}$/.test(text.trim());
-const IS_CURRENCY_LIKE = (text) => /^\d{1,3}(,\d{3})*(\.\d{2})?$/.test(text.trim());
+// Regex to identify currency-like strings (e.g., 1,234.56, 500.00)
+const IS_CURRENCY = (text) => /^\d{1,3}(,\d{3})*(\.\d{2})?$/.test(text.trim());
 
+// Helper to clean currency strings
 const parseCurrency = (str) => {
     if (!str) return '0.00';
     const clean = str.replace(/,/g, '').trim();
@@ -21,7 +24,7 @@ const parseCurrency = (str) => {
     return isNaN(num) ? '0.00' : num.toFixed(2);
 };
 
-router.post('/', upload.single('statement'), async (req, res) => {
+router.post('/im', upload.single('statement'), async (req, res) => {
     try {
         const buffer = new Uint8Array(req.file.buffer);
         const { password } = req.body;
@@ -33,6 +36,7 @@ router.post('/', upload.single('statement'), async (req, res) => {
         }).promise;
 
         let transactions = [];
+        let currentTx = null;
         let headerFound = false;
 
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -61,73 +65,81 @@ router.post('/', upload.single('statement'), async (req, res) => {
                 }
                 if (!headerFound) continue;
 
-                const dateItem = row.items.find(item => IS_DATE(item.str));
+                const dateItems = row.items.filter(item => IS_DATE(item.str));
+                const currencyItems = row.items.filter(item => IS_CURRENCY(item.str));
 
-                if (dateItem) {
-                    const tx = {
-                        tranDate: '', valueDate: '', refNo: '',
-                        withdrawn: '0.00', deposits: '0.00', balance: '',
+                if (dateItems.length > 0) {
+                    if (currentTx) {
+                        transactions.push(currentTx);
+                    }
+
+                    currentTx = {
+                        tranDate: dateItems[0]?.str || '',
+                        valueDate: dateItems[1]?.str || dateItems[0]?.str || '',
+                        refNo: '',
+                        withdrawn: '0.00',
+                        deposits: '0.00',
+                        balance: '0.00',
                         details: ''
                     };
 
-                    let detailParts = [];
-                    let tempRefNo = [];
+                    if (currencyItems.length > 0) {
+                        // The right-most currency is the balance
+                        currentTx.balance = parseCurrency(currencyItems[currencyItems.length - 1].str);
+                        
+                        const otherAmounts = currencyItems.slice(0, -1);
+                        if (otherAmounts.length > 0) {
+                            // Based on the statement, withdrawals appear before deposits
+                            const withdrawalItem = otherAmounts[0];
+                            if (withdrawalItem) {
+                                // A bit of a guess: withdrawals are usually in a column before deposits
+                                const depositOrWithdrawalX = withdrawalItem.x;
+                                if (depositOrWithdrawalX < 400) { // Withdrawals column is to the left
+                                     currentTx.withdrawn = parseCurrency(withdrawalItem.str);
+                                     if(otherAmounts.length > 1){
+                                         currentTx.deposits = parseCurrency(otherAmounts[1].str)
+                                     }
+                                } else { // Deposits column
+                                    currentTx.deposits = parseCurrency(withdrawalItem.str);
+                                }
+                            }
+                        }
+                    }
 
-                    row.items.forEach(item => {
-                        const x = item.x;
-                        if (x < 60) {
-                            if (IS_DATE(item.str)) tx.tranDate = item.str;
-                        }
-                        else if (x >= 60 && x < 120) {
-                            if (IS_DATE(item.str)) tx.valueDate = item.str;
-                        }
-                        else if (x >= 120 && x < 200 && !IS_DATE(item.str) && !IS_CURRENCY_LIKE(item.str)) { tempRefNo.push(item.str); }
-                        else if (x >= 200 && x < 300) { 
-                            const val = parseCurrency(item.str);
-                            if (val !== '0.00') tx.withdrawn = val; 
-                        }
-                        else if (x >= 300 && x < 380) { 
-                            const val = parseCurrency(item.str);
-                            if (val !== '0.00') tx.deposits = val; 
-                        }
-                        else if (x >= 380 && x < 450) { 
-                            const val = parseCurrency(item.str);
-                            if (val !== '0.00') tx.balance = val; 
-                        }
-                        else if (x >= 450) { detailParts.push(item.str); }
-                    });
-                    
-                    tx.refNo = tempRefNo.join(' ').trim();
-                    tx.details = detailParts.join(' ').trim();
-                    transactions.push(tx);
+                    const nonMonetaryItems = row.items.filter(item => !IS_DATE(item.str) && !IS_CURRENCY(item.str) && item.str !== 'Cr' && item.str !== 'Dr');
+                    currentTx.details = nonMonetaryItems.map(item => item.str).join(' ');
 
-                } else if (transactions.length > 0) {
-                    const lastTx = transactions[transactions.length - 1];
+                } else if (currentTx) {
+                    // This is a continuation row
                     const continuationText = row.items
-                        .filter(item => item.x >= 450)
+                        .filter(item => !IS_CURRENCY(item.str)) // Ignore any stray numbers
                         .map(item => item.str)
-                        .join(' ').trim();
+                        .join(' ')
+                        .trim();
                     
                     if (continuationText) {
-                        lastTx.details += ' ' + continuationText;
+                        currentTx.details += ' ' + continuationText;
                     }
                 }
             }
         }
+
+        if (currentTx) {
+            transactions.push(currentTx);
+        }
         
-        const processed = transactions.map(tx => ({
+        // Final cleanup
+        transactions = transactions.map(tx => ({
             ...tx,
-            refNo: tx.refNo.trim(),
-            details: tx.details.replace(/\s+/g, ' ').trim(),
-            withdrawn: tx.withdrawn.replace('Cr', '').replace('Dr', '').trim(),
-            deposits: tx.deposits.replace('Cr', '').replace('Dr', '').trim(),
-            balance: tx.balance.replace('Cr', '').replace('Dr', '').trim()
+            refNo: tx.details.split(' ')[0], // Best guess for Ref No
+            details: tx.details.replace(/\s+/g, ' ').trim()
         }));
+
 
         res.json({
             success: true,
-            transactions: processed,
-            count: processed.length
+            transactions,
+            count: transactions.length
         });
 
     } catch (error) {
@@ -140,4 +152,4 @@ router.post('/', upload.single('statement'), async (req, res) => {
     }
 });
 
-export default router;
+export default router;   

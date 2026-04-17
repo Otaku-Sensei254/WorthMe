@@ -128,6 +128,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mpesaRoutes from './routes/mpesa.js';
 import imRoutes from './routes/im.js';
+import airtelRoutes from './routes/airtel.js';
 
 dotenv.config();
 
@@ -138,8 +139,9 @@ app.use(cors());
 app.use(express.json());
 
 // Bank Parsing Routes
-app.use('/api/parse/mpesa', mpesaRoutes);
+app.use('/api/parse', mpesaRoutes);
 app.use('/api/parse/im', imRoutes);
+app.use('/api/parse', airtelRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Parser Service running on port ${PORT}`));

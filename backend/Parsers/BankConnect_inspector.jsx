@@ -102,7 +102,7 @@ const BankConnect = () => {
                         <div className="bc-results-card">
                             <div className="bc-results-header">
                                 <h3>Raw PDF Text (with X-Coordinates)</h3>
-                                <p>{rawRows.length} rows found. Look for the row with "Tran Date" and note the x-coordinates for each column.</p>
+                                <p>{rawRows.length} rows found. Please copy and paste the entire content of this table in the chat.</p>
                             </div>
                             <div className="bc-table-container">
                                 <table className="bc-table bc-raw-table">
