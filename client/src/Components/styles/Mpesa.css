@@ -135,6 +135,7 @@ body {
 
 .mpesa-summary-meta {
   display: flex;
+  
   flex-wrap: wrap;
   gap: 10px;
   color: #64748b;
@@ -143,10 +144,23 @@ body {
 
 .mpesa-summary-meta span {
   color: #64748b;
+  width: fit-content;
   padding: 4px 10px;
   border-radius: 999px;
   background: #ffffff;
   border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+
+.mpesa-summary-debug {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #fff7ed;
+  border: 1px dashed #fb923c;
+  color: #9a3412;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .mpesa-summary-breakdown {
@@ -164,7 +178,16 @@ body {
   border-collapse: collapse;
   font-size: 14px;
 }
+.mpesa-title-area h3{
+  font-size: 2rem;
+  color: #0da321;
 
+}
+.mpesa-count-subtext{
+  font-size: 12px;
+  color: #1b9110;
+  
+}
 .mpesa-summary-table th {
   background: #f8fafc;
   color: #64748b;

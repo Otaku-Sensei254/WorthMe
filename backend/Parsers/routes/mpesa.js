@@ -47,6 +47,7 @@ router.post('/mpesa', upload.single('statement'), async (req, res) => {
             });
 
             const sortedY = Object.keys(rowsMap).sort((a, b) => b - a);
+            let lastRowText = "";
 
             sortedY.forEach(y => {
                 const rowItems = rowsMap[y].sort((a, b) => a.x - b.x).filter(item => item.text !== "");
@@ -55,43 +56,51 @@ router.post('/mpesa', upload.single('statement'), async (req, res) => {
                 const rowText = rowItems.map(item => item.text).join(' ').replace(/\s+/g, ' ').trim();
                 const firstItem = rowItems[0].text;
 
+                if (/Customer Name:/i.test(rowText)) {
+                    const inlineValue = rowText.split('Customer Name:').pop().trim();
+                    summary.customerName = inlineValue || (!/^(Customer Name:|Mobile Number:|Email Address:|Statement Period:|Request Date:|SUMMARY|TRANSACTION TYPE|PAID IN|PAID OUT|DETAILED STATEMENT)$/i.test(lastRowText) ? lastRowText : "");
+                    return;
+                }
+
+                if (/Mobile Number:/i.test(rowText)) {
+                    const inlineValue = rowText.split('Mobile Number:').pop().trim();
+                    summary.mobileNumber = inlineValue || (!/^(Customer Name:|Mobile Number:|Email Address:|Statement Period:|Request Date:|SUMMARY|TRANSACTION TYPE|PAID IN|PAID OUT|DETAILED STATEMENT)$/i.test(lastRowText) ? lastRowText : "");
+                    return;
+                }
+
+                if (/Email Address:/i.test(rowText)) {
+                    const inlineValue = rowText.split('Email Address:').pop().trim();
+                    summary.emailAddress = inlineValue || (!/^(Customer Name:|Mobile Number:|Email Address:|Statement Period:|Request Date:|SUMMARY|TRANSACTION TYPE|PAID IN|PAID OUT|DETAILED STATEMENT)$/i.test(lastRowText) ? lastRowText : "");
+                    return;
+                }
+
+                if (/Statement Period:/i.test(rowText)) {
+                    const inlineValue = rowText.split('Statement Period:').pop().trim();
+                    summary.statementPeriod = inlineValue || (!/^(Customer Name:|Mobile Number:|Email Address:|Statement Period:|Request Date:|SUMMARY|TRANSACTION TYPE|PAID IN|PAID OUT|DETAILED STATEMENT)$/i.test(lastRowText) ? lastRowText : "");
+                    return;
+                }
+
+                if (/Request Date:/i.test(rowText)) {
+                    const inlineValue = rowText.split('Request Date:').pop().trim();
+                    summary.requestDate = inlineValue || (!/^(Customer Name:|Mobile Number:|Email Address:|Statement Period:|Request Date:|SUMMARY|TRANSACTION TYPE|PAID IN|PAID OUT|DETAILED STATEMENT)$/i.test(lastRowText) ? lastRowText : "");
+                    return;
+                }
+
                 if (/^SUMMARY$/i.test(rowText)) {
                     inSummarySection = true;
+                    lastRowText = rowText;
                     return;
                 }
 
                 if (inSummarySection) {
                     if (/^DETAILED STATEMENT$/i.test(rowText)) {
                         inSummarySection = false;
+                        lastRowText = rowText;
                         return;
                     }
 
                     if (/TRANSACTION TYPE/i.test(rowText) || /PAID IN/i.test(rowText) || /PAID OUT/i.test(rowText)) {
-                        return;
-                    }
-
-                    if (/Customer Name:/i.test(rowText)) {
-                        summary.customerName = rowText.split('Customer Name:').pop().trim();
-                        return;
-                    }
-
-                    if (/Mobile Number:/i.test(rowText)) {
-                        summary.mobileNumber = rowText.split('Mobile Number:').pop().trim();
-                        return;
-                    }
-
-                    if (/Email Address:/i.test(rowText)) {
-                        summary.emailAddress = rowText.split('Email Address:').pop().trim();
-                        return;
-                    }
-
-                    if (/Statement Period:/i.test(rowText)) {
-                        summary.statementPeriod = rowText.split('Statement Period:').pop().trim();
-                        return;
-                    }
-
-                    if (/Request Date:/i.test(rowText)) {
-                        summary.requestDate = rowText.split('Request Date:').pop().trim();
+                        lastRowText = rowText;
                         return;
                     }
 
@@ -115,6 +124,7 @@ router.post('/mpesa', upload.single('statement'), async (req, res) => {
                         });
                     }
 
+                    lastRowText = rowText;
                     return;
                 }
 
@@ -170,6 +180,8 @@ router.post('/mpesa', upload.single('statement'), async (req, res) => {
                         }
                     });
                 }
+
+                lastRowText = rowText;
             });
         }
         if (currentTx) transactions.push(currentTx);
@@ -193,7 +205,12 @@ router.post('/mpesa', upload.single('statement'), async (req, res) => {
             };
         });
 
-        res.json({ success: true, summary, transactions: processed });
+        res.json({
+            success: true,
+            summary,
+            debugCustomerName: summary.customerName || "",
+            transactions: processed
+        });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }

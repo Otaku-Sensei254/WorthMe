@@ -7,6 +7,7 @@ const Mpesa = () => {
     const [password, setPassword] = useState('');
     const [transactions, setTransactions] = useState(null);
     const [summary, setSummary] = useState(null);
+    const [debugCustomerName, setDebugCustomerName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +19,7 @@ const Mpesa = () => {
         setLoading(true);
         setError(null);
         setSummary(null);
+        setDebugCustomerName('');
         const formData = new FormData();
         formData.append('statement', file);
         formData.append('password', password);
@@ -32,6 +34,7 @@ const Mpesa = () => {
             if (result.success) {
                 setTransactions(result.transactions);
                 setSummary(result.summary || null);
+                setDebugCustomerName(result.debugCustomerName || '');
             } else {
                 setError(result.error || 'Failed to parse statement. Please check the password.');
             }
@@ -102,11 +105,12 @@ const Mpesa = () => {
                                 </div>
                                 <div className="mpesa-summary-value">Ksh {walletBalance}</div>
                                 <div className="mpesa-summary-meta">
-                                    ook
-                                    {summary.customerName ? <span>{summary.customerName}</span> : null}
-                                    {summary.statementPeriod ? <span>{summary.statementPeriod}</span> : null}
-                                    {summary.requestDate ? <span>{summary.requestDate}</span> : null}
+                                    {summary.customerName ? <span className="mpesa-summary-customer">Customer: {summary.customerName}</span> : null}
+                                    {summary.mobileNumber ? <span className="mpesa-summary-customer">Mobile: {summary.mobileNumber}</span> : null}
+                                    {summary.statementPeriod ? <span>Statement Period: {summary.statementPeriod}</span> : null}
+                                    {summary.requestDate ? <span>Request Date: {summary.requestDate}</span> : null}
                                 </div>
+
                             </div>
 
                             <div className="mpesa-summary-breakdown">
