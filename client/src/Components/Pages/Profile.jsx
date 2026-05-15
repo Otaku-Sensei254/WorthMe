@@ -3,6 +3,7 @@ import { UserContext } from "../../context/userContext";
 import { WealthContext } from "../../context/wealthContext";
 import { Link } from "react-router-dom";
 import "../styles/profile.css";
+import { formatMoney } from "../../utils/money";
 
 const Profile = () => {
   const { user } = useContext(UserContext);
@@ -18,7 +19,7 @@ const Profile = () => {
     { label: "Email", value: user?.email || "Not available yet" },
     { label: "Phone", value: user?.phone || "Not available yet" },
     { label: "User ID", value: user?.id || "Session-based" },
-    { label: "Tracked Worth", value: `Ksh ${totalWorth}` },
+    { label: "Tracked Worth", value: `Ksh ${formatMoney(totalWorth)}` },
   ];
 
   return (
@@ -28,13 +29,14 @@ const Profile = () => {
           <p className="profile-eyebrow">Session-based profile</p>
           <h1>{displayName}</h1>
           <p>
-            This profile uses your logged-in session data plus the M-Pesa and Airtel statement balances parsed in the browser.
+            This profile uses your logged-in session data plus the M-Pesa, Airtel, and I&M statement balances parsed in the browser.
           </p>
         </div>
         <div className="profile-hero-actions">
           <Link to="/dashboard" className="profile-action">Back to Dashboard</Link>
           <Link to="/mpesa" className="profile-action secondary">Upload M-Pesa</Link>
           <Link to="/airtel" className="profile-action secondary">Upload Airtel</Link>
+          <Link to="/banks/connect/im" className="profile-action secondary">Upload I&M</Link>
         </div>
       </section>
 
@@ -77,9 +79,9 @@ const Profile = () => {
             <article key={wallet.key} className="profile-wallet-card" style={{ borderTop: `4px solid ${wallet.accent}` }}>
               <div className="profile-wallet-header">
                 <h3>{wallet.name}</h3>
-                <span>Ksh {wallet.worth}</span>
+                <span>Ksh {formatMoney(wallet.worth)}</span>
               </div>
-              <p>{wallet.customerName || "Customer name will appear after you upload a statement."}</p>
+              <p>{wallet.customerName || wallet.accountNumber || "Account details will appear after you upload a statement."}</p>
               <small>{wallet.statementPeriod || "Statement period not captured yet."}</small>
             </article>
           ))}
@@ -90,4 +92,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

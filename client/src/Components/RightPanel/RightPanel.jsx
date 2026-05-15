@@ -29,7 +29,7 @@ const RightPanel = () => {
         </table>
       ) : (
         <p className="empty-state">
-          Upload an M-Pesa or Airtel statement to populate this panel with real transactions.
+          Upload an M-Pesa, Airtel, or I&M statement to populate this panel with real transactions.
         </p>
       )}
     </div>

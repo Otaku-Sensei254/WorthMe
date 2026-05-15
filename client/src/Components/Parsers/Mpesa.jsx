@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useContext } from 'react';
+import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet } from 'lucide-react';
 import '../styles/Mpesa.css';
 import { WealthContext } from '../../context/wealthContext';
+import { formatMoney } from '../../utils/money';
 
 const Mpesa = () => {
     const [file, setFile] = useState(null);
@@ -11,7 +12,50 @@ const Mpesa = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const { saveWalletSnapshot } = useContext(WealthContext);
+    const { saveWalletSnapshot, wealthState } = useContext(WealthContext);
+
+    // Hydrate cached parse after refresh (no passwords stored).
+    useEffect(() => {
+        if (transactions && transactions.length > 0) return;
+        const cached = wealthState?.wallets?.mpesa;
+        if (!cached?.transactions?.length) return;
+        setTransactions(cached.transactions);
+        setSummary(cached.summary || null);
+    }, [transactions, wealthState]);
+
+    // Rehydrate from DB if local cache is empty.
+    useEffect(() => {
+        const load = async () => {
+            if (transactions && transactions.length > 0) return;
+            try {
+                const res = await fetch('http://localhost:4000/api/statements/latest?provider=mpesa', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'include',
+                });
+                const data = await res.json();
+                if (!data?.success || !data?.transactions?.length) return;
+                setTransactions(data.transactions);
+                setSummary(data.summary || null);
+                saveWalletSnapshot('mpesa', {
+                    provider: 'M-Pesa',
+                    label: 'M-Pesa Wallet',
+                    worth: data.summary?.currentBalance || '0.00',
+                    balance: data.summary?.currentBalance || '0.00',
+                    summary: data.summary || null,
+                    transactions: data.transactions || [],
+                    customerName: data.summary?.customerName || '',
+                    mobileNumber: data.summary?.mobileNumber || '',
+                    statementPeriod: data.summary?.statementPeriod || '',
+                    requestDate: data.summary?.requestDate || '',
+                });
+            } catch {
+                // ignore
+            }
+        };
+        load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -46,6 +90,19 @@ const Mpesa = () => {
                     statementPeriod: result.summary?.statementPeriod || '',
                     requestDate: result.summary?.requestDate || '',
                 });
+
+                // Persist snapshot to Phoenix DB (no password stored).
+                fetch('http://localhost:4000/api/statements', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        provider: 'mpesa',
+                        summary: result.summary || {},
+                        transactions: result.transactions || [],
+                        meta: { source: 'pdf-upload' },
+                    })
+                }).catch(() => {});
             } else {
                 setError(result.error || 'Failed to parse statement. Please check the password.');
             }
@@ -114,7 +171,7 @@ const Mpesa = () => {
                                     <Wallet size={16} />
                                     M-Pesa Wallet Worth
                                 </div>
-                                <div className="mpesa-summary-value">Ksh {walletBalance}</div>
+                                <div className="mpesa-summary-value">Ksh {formatMoney(walletBalance)}</div>
                                 <div className="mpesa-summary-meta">
                                     {summary.customerName ? <span className="mpesa-summary-customer">Customer: {summary.customerName}</span> : null}
                                     {summary.mobileNumber ? <span className="mpesa-summary-customer">Mobile: {summary.mobileNumber}</span> : null}

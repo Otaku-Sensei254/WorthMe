@@ -211,3 +211,230 @@
     background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
     background-attachment: local, local, scroll, scroll;
 }
+
+/* I&M statement parser */
+.bc-im-results {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.bc-im-summary-panel,
+.bc-im-table-card {
+    background: #ffffff;
+    border: 1px solid #dbe5f4;
+    border-radius: 8px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+
+.bc-im-summary-panel {
+    padding: 22px;
+}
+
+.bc-im-summary-main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.bc-im-pill {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: #eaf1ff;
+    color: #00339f;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.bc-im-balance {
+    color: #0f172a;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.bc-im-summary-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #475569;
+    font-size: 13px;
+}
+
+.bc-im-summary-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+}
+
+.bc-im-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.bc-im-stat {
+    min-height: 96px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    background: #fbfdff;
+}
+
+.bc-im-stat svg {
+    color: #00339f;
+}
+
+.bc-im-stat span,
+.bc-im-details-grid span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.bc-im-stat strong {
+    color: #0f172a;
+    font-size: 16px;
+}
+
+.bc-im-details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.bc-im-details-grid div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 0 0;
+}
+
+.bc-im-details-grid strong {
+    color: #1e293b;
+    font-size: 13px;
+}
+
+.bc-im-scroll-area {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bc-im-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+}
+
+.bc-im-table th {
+    background: #f7faff;
+    border-bottom: 1px solid #dbe5f4;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 14px 16px;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.bc-im-table td {
+    border-bottom: 1px solid #eef2f7;
+    color: #1e293b;
+    font-size: 13px;
+    padding: 14px 16px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.bc-im-row:hover {
+    background: #f8fbff;
+}
+
+.bc-im-date-cell {
+    color: #475569;
+    font-weight: 700;
+}
+
+.bc-im-narrative-cell {
+    min-width: 330px;
+    max-width: 480px;
+    white-space: normal !important;
+}
+
+.bc-im-tx-desc {
+    color: #0f172a;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.bc-im-narrative-cell small {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+.bc-text-right {
+    text-align: right !important;
+}
+
+.bc-im-amt-in {
+    color: #059669 !important;
+    font-weight: 800;
+}
+
+.bc-im-amt-out {
+    color: #dc2626 !important;
+    font-weight: 800;
+}
+
+.bc-im-balance-cell {
+    color: #00339f !important;
+    font-weight: 900;
+}
+
+@media (max-width: 1180px) {
+    .bc-im-stat-grid,
+    .bc-im-details-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .bc-im-summary-panel {
+        padding: 16px;
+    }
+
+    .bc-im-balance {
+        font-size: 28px;
+    }
+
+    .bc-im-stat-grid,
+    .bc-im-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bc-im-summary-meta span {
+        width: 100%;
+    }
+}

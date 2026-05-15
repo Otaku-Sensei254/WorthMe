@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Upload, FileText, Search, AlertCircle, Loader2, ShieldCheck, Link2, Table, Database, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Upload, FileText, Search, AlertCircle, Loader2, ShieldCheck, Link2, Database, CheckCircle2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo, User, CreditCard, CalendarDays } from 'lucide-react';
 import '../Components/styles/BankConnect.css';
+import { WealthContext } from '../context/wealthContext';
+import { formatMoney } from '../utils/money';
 
 // Minimal bank details, no more hardcoded columns
 const bankDetails = {
@@ -20,11 +22,14 @@ const formatLabel = (key) => {
 const BankConnect = () => {
     const { bankId } = useParams();
     const navigate = useNavigate();
+    const { saveWalletSnapshot, wealthState } = useContext(WealthContext);
     const bank = bankDetails[bankId] || bankDetails.im;
+    const isImBank = bankId === 'im';
 
     const [method, setMethod] = useState('pdf'); // Default to PDF
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState(null);
+    const [summary, setSummary] = useState(null);
     const [columns, setColumns] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
@@ -47,11 +52,63 @@ const BankConnect = () => {
         }
     }, [transactions]);
 
+    // Hydrate cached parses after refresh (no passwords stored).
+    useEffect(() => {
+        if (!isImBank) return;
+        if (transactions && transactions.length > 0) return;
+
+        const cached = wealthState?.wallets?.im;
+        if (!cached?.transactions?.length) return;
+
+        setTransactions(cached.transactions);
+        setSummary(cached.summary || null);
+    }, [isImBank, transactions, wealthState]);
+
+    // Rehydrate from DB if local cache is empty (I&M only for now).
+    useEffect(() => {
+        const load = async () => {
+            if (!isImBank) return;
+            if (transactions && transactions.length > 0) return;
+            try {
+                const res = await fetch('http://localhost:4000/api/statements/latest?provider=im', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'include',
+                });
+                const data = await res.json();
+                if (!data?.success || !data?.transactions?.length) return;
+                setTransactions(data.transactions);
+                setSummary(data.summary || null);
+
+                const nextSummary = data.summary || {};
+                const worth = nextSummary.balanceAsOf || nextSummary.effectiveAvailableBalance || nextSummary.openingBalance || '0.00';
+
+                saveWalletSnapshot('im', {
+                    provider: 'I&M Bank',
+                    label: 'I&M Bank Account',
+                    worth,
+                    balance: worth,
+                    summary: nextSummary,
+                    transactions: data.transactions || [],
+                    customerName: nextSummary.accountName || '',
+                    accountNumber: nextSummary.accountNumber || '',
+                    accountType: nextSummary.accountType || '',
+                    statementPeriod: nextSummary.statementPeriod || '',
+                });
+            } catch {
+                // ignore
+            }
+        };
+        load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isImBank]);
+
     const handleConnect = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
         setTransactions(null); // Reset on new connection
+        setSummary(null);
         setColumns([]);      // Reset on new connection
 
         if (method === 'direct') {
@@ -63,6 +120,7 @@ const BankConnect = () => {
                     { date: '2024-06-05', ref: 'FT24155L0', details: 'Transfer to M-Pesa', withdrawn: '10,000.00', paidIn: '0.00', balance: '170,800.00' }
                 ];
                 setTransactions(mockTransactions);
+                setSummary(null);
                 setLoading(false);
             }, 2000);
         } else {
@@ -80,6 +138,37 @@ const BankConnect = () => {
                 const result = await response.json();
                 if (result.success && result.transactions.length > 0) {
                     setTransactions(result.transactions);
+                    setSummary(result.summary || null);
+
+                    if (bankId === 'im') {
+                        const nextSummary = result.summary || {};
+                        const worth = nextSummary.balanceAsOf || nextSummary.effectiveAvailableBalance || nextSummary.openingBalance || '0.00';
+
+                        saveWalletSnapshot('im', {
+                            provider: 'I&M Bank',
+                            label: 'I&M Bank Account',
+                            worth,
+                            balance: worth,
+                            summary: nextSummary,
+                            transactions: result.transactions || [],
+                            customerName: nextSummary.accountName || '',
+                            accountNumber: nextSummary.accountNumber || '',
+                            accountType: nextSummary.accountType || '',
+                            statementPeriod: nextSummary.statementPeriod || '',
+                        });
+
+                        fetch('http://localhost:4000/api/statements', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                provider: 'im',
+                                summary: nextSummary,
+                                transactions: result.transactions || [],
+                                meta: { source: 'pdf-upload' },
+                            })
+                        }).catch(() => {});
+                    }
                 } else if (result.success) {
                     setError("No transactions found in the PDF.");
                 }
@@ -100,6 +189,9 @@ const BankConnect = () => {
             Object.values(tx).some(val => String(val).toLowerCase().includes(searchTerm.toLowerCase()))
         );
     }, [transactions, searchTerm]);
+
+    const imBalance = summary?.balanceAsOf || summary?.effectiveAvailableBalance || summary?.openingBalance || '0.00';
+    const imBalanceDate = summary?.balanceAsOfDate || summary?.effectiveAvailableBalanceDate || '';
 
     return (
         <div className="bc-page">
@@ -166,7 +258,116 @@ const BankConnect = () => {
 
                 {/* RIGHT: RESULTS TABLE */}
                 <main className="bc-main">
-                    {transactions ? (
+                    {transactions && isImBank ? (
+                        <div className="bc-im-results">
+                            {summary && (
+                                <section className="bc-im-summary-panel">
+                                    <div className="bc-im-summary-main">
+                                        <div className="bc-im-pill">
+                                            <Wallet size={16} />
+                                            I&M Account Worth
+                                        </div>
+                                        <div className="bc-im-balance">Ksh {formatMoney(imBalance)}</div>
+                                        <div className="bc-im-summary-meta">
+                                            {summary.accountName ? <span><User size={14} /> {summary.accountName}</span> : null}
+                                            {summary.accountNumber ? <span><CreditCard size={14} /> {summary.accountNumber}</span> : null}
+                                            {summary.statementPeriod ? <span><CalendarDays size={14} /> {summary.statementPeriod}</span> : null}
+                                        </div>
+                                    </div>
+
+                                    <div className="bc-im-stat-grid">
+                                        <div className="bc-im-stat">
+                                            <BadgeInfo size={17} />
+                                            <span>Opening Balance</span>
+                                            <strong>Ksh {formatMoney(summary.openingBalance || '0.00')} {summary.openingBalanceType || ''}</strong>
+                                        </div>
+                                        <div className="bc-im-stat">
+                                            <ArrowDownRight size={17} />
+                                            <span>Total Withdrawals</span>
+                                            <strong>Ksh {formatMoney(summary.totalWithdrawals || '0.00')}</strong>
+                                        </div>
+                                        <div className="bc-im-stat">
+                                            <ArrowUpRight size={17} />
+                                            <span>Total Deposits</span>
+                                            <strong>Ksh {formatMoney(summary.totalDeposits || '0.00')}</strong>
+                                        </div>
+                                        <div className="bc-im-stat">
+                                            <Wallet size={17} />
+                                            <span>Balance as of {imBalanceDate || 'statement'}</span>
+                                            <strong>Ksh {formatMoney(imBalance)}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="bc-im-details-grid">
+                                        <div>
+                                            <span>Account Type</span>
+                                            <strong>{summary.accountType || '—'}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Currency</span>
+                                            <strong>{summary.accountCurrency || '—'}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Cleared Balance</span>
+                                            <strong>Ksh {formatMoney(summary.clearedBalance || '0.00')}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Effective Available</span>
+                                            <strong>Ksh {formatMoney(summary.effectiveAvailableBalance || '0.00')}</strong>
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
+
+                            <section className="bc-im-table-card">
+                                <div className="bc-results-header">
+                                    <div className="bc-info">
+                                        <h3>I&M Statement Transactions</h3>
+                                        <p>Found {filteredData.length} of {transactions.length} records</p>
+                                    </div>
+                                    <div className="bc-search">
+                                        <Search size={18} />
+                                        <input placeholder="Search narrative, date, or amount..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="bc-im-scroll-area">
+                                    <table className="bc-im-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tran Date</th>
+                                                <th>Value Date</th>
+                                                <th>Transaction Narrative</th>
+                                                <th className="bc-text-right">Withdrawals</th>
+                                                <th className="bc-text-right">Deposits</th>
+                                                <th className="bc-text-right">Balance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filteredData.map((tx, idx) => (
+                                                <tr key={`${tx.tranDate}-${idx}`} className="bc-im-row">
+                                                    <td data-label="Tran Date" className="bc-im-date-cell">{tx.tranDate}</td>
+                                                    <td data-label="Value Date" className="bc-im-date-cell">{tx.valueDate || '—'}</td>
+                                                    <td data-label="Narrative" className="bc-im-narrative-cell">
+                                                        <div className="bc-im-tx-desc">{tx.transactionNarrative || '—'}</div>
+                                                        {tx.refNo ? <small>Ref: {tx.refNo}</small> : null}
+                                                    </td>
+                                                    <td data-label="Withdrawals" className="bc-text-right bc-im-amt-out">
+                                                        {tx.withdrawals !== '0.00' ? `-Ksh ${formatMoney(tx.withdrawals)}` : '—'}
+                                                    </td>
+                                                    <td data-label="Deposits" className="bc-text-right bc-im-amt-in">
+                                                        {tx.deposits !== '0.00' ? `+Ksh ${formatMoney(tx.deposits)}` : '—'}
+                                                    </td>
+                                                    <td data-label="Balance" className="bc-text-right bc-im-balance-cell">
+                                                        Ksh {formatMoney(tx.balance)} {tx.balanceType || ''}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+                    ) : transactions ? (
                         <div className="bc-results-card">
                             <div className="bc-results-header">
                                 <div className="bc-info">
@@ -192,7 +393,7 @@ const BankConnect = () => {
                                                     const val = tx[col.key];
                                                     // Dynamic highlighting for common money columns
                                                     const isPos = (col.key.toLowerCase().includes('paidin') || col.key.toLowerCase().includes('deposits') || col.key.toLowerCase().includes('credit')) && parseFloat(val) > 0;
-                                                    const isNeg = (col.key.toLowerCase().includes('withdrawn') || col.key.toLowerCase().includes('debit')) && parseFloat(val) > 0;
+                                                    const isNeg = (col.key.toLowerCase().includes('withdrawn') || col.key.toLowerCase().includes('withdrawal') || col.key.toLowerCase().includes('debit')) && parseFloat(val) > 0;
                                                     return (
                                                         <td key={col.key} className={isPos ? 'amt-pos' : isNeg ? 'amt-neg' : ''}>
                                                             {val || '—'}

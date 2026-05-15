@@ -140,7 +140,7 @@ app.use(express.json());
 
 // Bank Parsing Routes
 app.use('/api/parse', mpesaRoutes);
-app.use('/api/parse/im', imRoutes);
+app.use('/api/parse', imRoutes);
 app.use('/api/parse', airtelRoutes);
 
 const PORT = process.env.PORT || 5000;

@@ -23,10 +23,16 @@ defmodule WorthMeWeb.Router do
     pipe_through :api
 
     get "/me", UserController, :show
+    post "/statements", StatementController, :create
+    get "/statements/latest", StatementController, :latest
 
     post "/users/register", UserRegistrationController, :create
     post "/users/log_in", UserSessionController, :create
     delete "/users/log_out", UserSessionController, :delete
+
+    # M-Pesa Live Sync Routes
+    post "/mpesa/sync", MpesaController, :sync
+    get "/mpesa/status/:conversation_id", MpesaController, :status
   end
 
   # Enable Swoosh mailbox preview in development

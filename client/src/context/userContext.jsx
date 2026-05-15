@@ -26,7 +26,10 @@ export const UserProvider = ({ children }) => {
       });
 
       if (!res.ok) {
-        throw new Error("Not authenticated");
+        // Only clear local user cache on real auth failures.
+        const error = new Error("Not authenticated");
+        error.status = res.status;
+        throw error;
       }
 
       const data = await res.json();
@@ -35,9 +38,17 @@ export const UserProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(data));
       console.log("User session verified:", data);
     } catch (err) {
-      console.log("No active session found.");
-      setUser(null);
-      localStorage.removeItem("user");
+      // If the backend is down / network fails, keep whatever is in localStorage so
+      // the app can still show cached statement results after refresh.
+      const isAuthFailure = err?.message === "Not authenticated" || err?.status === 401;
+      if (isAuthFailure) {
+        console.log("No active session found.");
+        setUser(null);
+        localStorage.removeItem("user");
+      } else {
+        console.log("Session check failed (offline/back-end down). Using cached user.");
+        // Keep existing user state (initialized from localStorage).
+      }
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useContext } from 'react';
+import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo } from 'lucide-react';
 import '../styles/Airtel.css';
 import { WealthContext } from '../../context/wealthContext';
+import { formatMoney } from '../../utils/money';
 
 const Airtel = () => {
     const [file, setFile] = useState(null);
@@ -10,7 +11,49 @@ const Airtel = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const { saveWalletSnapshot } = useContext(WealthContext);
+    const { saveWalletSnapshot, wealthState } = useContext(WealthContext);
+
+    // Hydrate cached parse after refresh.
+    useEffect(() => {
+        if (transactions && transactions.length > 0) return;
+        const cached = wealthState?.wallets?.airtel;
+        if (!cached?.transactions?.length) return;
+        setTransactions(cached.transactions);
+        setSummary(cached.summary || null);
+    }, [transactions, wealthState]);
+
+    // Rehydrate from DB if local cache is empty.
+    useEffect(() => {
+        const load = async () => {
+            if (transactions && transactions.length > 0) return;
+            try {
+                const res = await fetch('http://localhost:4000/api/statements/latest?provider=airtel', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'include',
+                });
+                const data = await res.json();
+                if (!data?.success || !data?.transactions?.length) return;
+                setTransactions(data.transactions);
+                setSummary(data.summary || null);
+                saveWalletSnapshot('airtel', {
+                    provider: 'Airtel Money',
+                    label: 'Airtel Wallet',
+                    worth: data.summary?.closingBalance || '0.00',
+                    balance: data.summary?.closingBalance || '0.00',
+                    summary: data.summary || null,
+                    transactions: data.transactions || [],
+                    customerName: data.summary?.customerName || '',
+                    statementPeriod: data.summary?.statementPeriod || '',
+                    requestDate: data.summary?.requestDate || '',
+                });
+            } catch {
+                // ignore
+            }
+        };
+        load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -43,6 +86,18 @@ const Airtel = () => {
                     statementPeriod: result.summary?.statementPeriod || '',
                     requestDate: result.summary?.requestDate || '',
                 });
+
+                fetch('http://localhost:4000/api/statements', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        provider: 'airtel',
+                        summary: result.summary || {},
+                        transactions: result.transactions || [],
+                        meta: { source: 'pdf-upload' },
+                    })
+                }).catch(() => {});
             } else {
                 setError(result.error || 'Failed to parse Airtel statement.');
             }
@@ -101,7 +156,7 @@ const Airtel = () => {
                                     <Wallet size={16} />
                                     Airtel Wallet Worth
                                 </div>
-                                <div className="airtel-summary-value">Ksh {worthValue}</div>
+                                <div className="airtel-summary-value">Ksh {formatMoney(worthValue)}</div>
                                 <div className="airtel-summary-meta">
                                     {summary.customerName ? <span>{summary.customerName}</span> : null}
                                     {summary.statementPeriod ? <span>{summary.statementPeriod}</span> : null}
@@ -112,17 +167,17 @@ const Airtel = () => {
                                 <div className="airtel-summary-card">
                                     <ArrowUpRight size={16} />
                                     <span>Total Credit</span>
-                                    <strong>Ksh {summary.totalCredit}</strong>
+                                    <strong>Ksh {formatMoney(summary.totalCredit)}</strong>
                                 </div>
                                 <div className="airtel-summary-card">
                                     <ArrowDownRight size={16} />
                                     <span>Total Debit</span>
-                                    <strong>Ksh {summary.totalDebit}</strong>
+                                    <strong>Ksh {formatMoney(summary.totalDebit)}</strong>
                                 </div>
                                 <div className="airtel-summary-card">
                                     <BadgeInfo size={16} />
                                     <span>Closing Balance</span>
-                                    <strong>Ksh {summary.closingBalance}</strong>
+                                    <strong>Ksh {formatMoney(summary.closingBalance)}</strong>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +232,7 @@ const Airtel = () => {
                                         <td data-label="Debit" className="airtel-text-right airtel-amt-out">
                                             {tx.debit !== "0.00" ? `-Ksh ${tx.debit}` : '—'}
                                         </td>
-                                        <td data-label="Balance" className="airtel-text-right airtel-balance-cell">Ksh {tx.balance}</td>
+                                        <td data-label="Balance" className="airtel-text-right airtel-balance-cell">Ksh {formatMoney(tx.balance)}</td>
                                     </tr>
                                 ))}
                             </tbody>
