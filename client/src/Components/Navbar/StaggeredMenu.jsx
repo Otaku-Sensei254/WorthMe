@@ -173,7 +173,7 @@ export const StaggeredMenu = ({
 
     openTlRef.current = tl;
     return tl;
-  }, []);
+  }, [position]);
 
   const playOpen = useCallback(() => {
     if (busyRef.current) return;
@@ -311,7 +311,7 @@ export const StaggeredMenu = ({
   return (
     <div
       className={(className ? className + ' ' : '') + 'staggered-menu-wrapper' + (isFixed ? ' fixed-wrapper' : '')}
-      style={accentColor ? { ['--sm-accent']: accentColor } : undefined}
+      style={accentColor ? { '--sm-accent': accentColor } : undefined}
       data-position={position}
       data-open={open || undefined}
     >
@@ -362,7 +362,7 @@ export const StaggeredMenu = ({
             <span className="sm-panel-wordmark">Worth<span>Me</span></span>
             <span className="sm-panel-tagline">Your money, in one view.</span>
           </div>
-          <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
+          <ul className="sm-panel-list" data-numbering={displayItemNumbering || undefined}>
             {items && items.length ? (
               items.map((it, idx) => (
                 <li className="sm-panel-itemWrap" key={it.label + idx}>
@@ -403,15 +403,15 @@ export const StaggeredMenu = ({
           {displaySocials && socialItems && socialItems.length > 0 && (
             <div className="sm-socials" aria-label="Social links">
               <h3 className="sm-socials-title">Socials</h3>
-              <ul className="sm-socials-list" role="list">
-                {socialItems.map((s, i) => (
-                  <li key={s.label + i} className="sm-socials-item">
-                    <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link">
-                      {s.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+                <ul className="sm-socials-list">
+                  {socialItems.map((it, idx) => (
+                    <li key={idx} className="sm-socials-item">
+                      <a href={it.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link">
+                        {it.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
             </div>
           )}
         </div>
