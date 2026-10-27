@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet } from 'lucide-react';
 import '../styles/Mpesa.css';
+import '../styles/ParserPages.css';
 import { WealthContext } from '../../context/wealthContext';
 import { formatMoney } from '../../utils/money';
 
@@ -92,17 +93,25 @@ const Mpesa = () => {
                 });
 
                 // Persist snapshot to Phoenix DB (no password stored).
-                fetch('http://localhost:4000/api/statements', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        provider: 'mpesa',
-                        summary: result.summary || {},
-                        transactions: result.transactions || [],
-                        meta: { source: 'pdf-upload' },
-                    })
-                }).catch(() => {});
+                try {
+                    const saveRes = await fetch('http://localhost:4000/api/statements', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            provider: 'mpesa',
+                            summary: result.summary || {},
+                            transactions: result.transactions || [],
+                            meta: { source: 'pdf-upload' },
+                        })
+                    });
+                    if (!saveRes.ok) {
+                        const errBody = await saveRes.text();
+                        console.error('Failed to save mpesa statement:', saveRes.status, errBody);
+                    }
+                } catch (err) {
+                    console.error('Failed to save mpesa statement:', err);
+                }
             } else {
                 setError(result.error || 'Failed to parse statement. Please check the password.');
             }
@@ -124,19 +133,31 @@ const Mpesa = () => {
     const walletBalance = summary?.currentBalance || (filteredData[0]?.balance || '0.00');
 
     return (
-        <div className="mpesa-wrapper">
+        <div className="parser-page mpesa-wrapper">
             {/* Header Section */}
-            <header className="mpesa-header">
+            <header className="parser-page-header mpesa-header">
                 <div className="mpesa-icon-box"><FileText size={24} /></div>
-                <h1>M-Pesa Statement <span>Pro</span></h1>
+                <div className="parser-page-heading">
+                    <span className="parser-page-eyebrow">MOBILE MONEY · STATEMENTS</span>
+                    <h1>M-Pesa statement</h1>
+                    <p>Review wallet activity and balances from your M-Pesa PDF.</p>
+                </div>
             </header>
 
             {/* Upload Section */}
-            <div className="mpesa-card">
+            <section className="parser-upload-card mpesa-card" aria-labelledby="mpesa-upload-title">
+                <div className="parser-upload-heading">
+                    <div>
+                        <h2 id="mpesa-upload-title">Upload a statement</h2>
+                        <p>Select your PDF and enter the password used to open it.</p>
+                    </div>
+                    <span className="parser-file-type">PDF statement</span>
+                </div>
                 <form onSubmit={handleUpload} className="mpesa-upload-grid">
                     <div className="mpesa-input-group">
-                        <label>M-Pesa Statement (PDF)</label>
+                        <label htmlFor="mpesa-statement-file">Statement PDF</label>
                         <input
+                            id="mpesa-statement-file"
                             type="file"
                             accept=".pdf"
                             onChange={(e) => setFile(e.target.files[0])}
@@ -144,8 +165,9 @@ const Mpesa = () => {
                         />
                     </div>
                     <div className="mpesa-input-group">
-                        <label>PDF Password</label>
+                        <label htmlFor="mpesa-statement-password">PDF password</label>
                         <input
+                            id="mpesa-statement-password"
                             type="password"
                             placeholder="Enter ID/Password"
                             value={password}
@@ -159,7 +181,7 @@ const Mpesa = () => {
                     </button>
                 </form>
                 {error && <div className="mpesa-error-msg"><AlertCircle size={18} /> {error}</div>}
-            </div>
+            </section>
 
             {/* Results Section */}
             {transactions && (

@@ -1,5 +1,15 @@
 # WorthMe
 
+## Database (Development)
+
+This Phoenix app uses Postgres on port `5433` in development (see `config/dev.exs`).
+
+Connect with:
+
+```bash
+psql "postgresql://dtech:dtechpsql@localhost:5433/worth_me_dev"
+```
+
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies

@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "./userContext";
 
-export const WealthContext = createContext();
+export const  WealthContext = createContext();
 
 const STORAGE_PREFIX = "worthme-wealth";
 const LAST_KEY_STORAGE = `${STORAGE_PREFIX}:last_key`;
 
 const emptyWallet = {
   summary: null,
-  transactions: [],
+  transactions: [], 
   worth: "0.00",
   updatedAt: null,
 };
@@ -82,6 +82,104 @@ export const WealthProvider = ({ children }) => {
     }
 
     setWealthState(makeDefaultState());
+  }, [user]);
+
+  // Rehydrate from DB on app start (covers dashboard refresh).
+  useEffect(() => {
+    const loadFromDb = async () => {
+      if (!user) return;
+
+      const providers = ["mpesa", "airtel", "im"];
+
+      const fetchLatest = async (provider) => {
+        const res = await fetch(`http://localhost:4000/api/statements/latest?provider=${provider}`, {
+          method: "GET",
+          headers: { Accept: "application/json" },
+          credentials: "include",
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data?.success || !Array.isArray(data.transactions) || data.transactions.length === 0) return null;
+        return data;
+      };
+
+      try {
+        const results = await Promise.all(providers.map(fetchLatest));
+
+        setWealthState((prev) => {
+          const next = hydrateState(prev);
+          const now = new Date().toISOString();
+
+          results.forEach((data) => {
+            if (!data) return;
+            const provider = String(data.provider || "").toLowerCase();
+            if (!TRACKED_PROVIDER_KEYS.includes(provider)) return;
+
+            // Do not overwrite local state if it already has transactions (keeps live M-Pesa).
+            const existing = next.wallets?.[provider];
+            if (existing?.transactions?.length) return;
+
+            const summary = data.summary || null;
+            const transactions = data.transactions || [];
+
+            let worth = "0.00";
+            let label = provider;
+            let customerName = "";
+            let mobileNumber = "";
+            let statementPeriod = "";
+            let accountNumber = "";
+            let accountType = "";
+
+            if (provider === "mpesa") {
+              worth = summary?.currentBalance || "0.00";
+              label = "M-Pesa Wallet";
+              customerName = summary?.customerName || "";
+              mobileNumber = summary?.mobileNumber || "";
+              statementPeriod = summary?.statementPeriod || "";
+            } else if (provider === "airtel") {
+              worth = summary?.closingBalance || "0.00";
+              label = "Airtel Wallet";
+              customerName = summary?.customerName || "";
+              mobileNumber = summary?.mobileNumber || "";
+              statementPeriod = summary?.statementPeriod || "";
+            } else if (provider === "im") {
+              worth =
+                summary?.balanceAsOf ||
+                summary?.effectiveAvailableBalance ||
+                summary?.openingBalance ||
+                "0.00";
+              label = "I&M Bank Account";
+              customerName = summary?.accountName || "";
+              accountNumber = summary?.accountNumber || "";
+              accountType = summary?.accountType || "";
+              statementPeriod = summary?.statementPeriod || "";
+            }
+
+            next.wallets[provider] = {
+              ...(next.wallets[provider] || emptyWallet),
+              summary,
+              transactions,
+              worth: formatAmount(worth),
+              provider: provider === "im" ? "I&M Bank" : provider === "airtel" ? "Airtel Money" : "M-Pesa",
+              label,
+              customerName,
+              mobileNumber,
+              accountNumber,
+              accountType,
+              statementPeriod,
+              requestDate: summary?.requestDate || "",
+              updatedAt: now,
+            };
+          });
+
+          return next;
+        });
+      } catch {
+        // ignore (offline/back-end down)
+      }
+    };
+
+    loadFromDb();
   }, [user]);
 
   useEffect(() => {

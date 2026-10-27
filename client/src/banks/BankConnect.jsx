@@ -157,17 +157,25 @@ const BankConnect = () => {
                             statementPeriod: nextSummary.statementPeriod || '',
                         });
 
-                        fetch('http://localhost:4000/api/statements', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            credentials: 'include',
-                            body: JSON.stringify({
-                                provider: 'im',
-                                summary: nextSummary,
-                                transactions: result.transactions || [],
-                                meta: { source: 'pdf-upload' },
-                            })
-                        }).catch(() => {});
+                        try {
+                            const saveRes = await fetch('http://localhost:4000/api/statements', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify({
+                                    provider: 'im',
+                                    summary: nextSummary,
+                                    transactions: result.transactions || [],
+                                    meta: { source: 'pdf-upload' },
+                                })
+                            });
+                            if (!saveRes.ok) {
+                                const errBody = await saveRes.text();
+                                console.error('Failed to save I&M statement:', saveRes.status, errBody);
+                            }
+                        } catch (err) {
+                            console.error('Failed to save I&M statement:', err);
+                        }
                     }
                 } else if (result.success) {
                     setError("No transactions found in the PDF.");

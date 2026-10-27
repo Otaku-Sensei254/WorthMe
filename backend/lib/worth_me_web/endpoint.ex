@@ -18,7 +18,11 @@ defmodule WorthMeWeb.Endpoint do
   # You should set gzip to true if you are running phx.digest
   # when deploying your static files in production.
   plug Plug.Session, @session_options
-  plug CORSPlug, origin: ["http://localhost:3000", "http://localhost:5173"]
+  plug CORSPlug,
+    origin: ["http://localhost:3000", "http://localhost:5173"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    headers: ["Accept", "Authorization", "Content-Type"]
 
   plug Plug.Static,
   at: "/",

@@ -1,12 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "../styles/auth.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { UserContext } from "../../context/userContext";
+import GoogleAuthButton from "../Auth/GoogleAuthButton";
+import AuthLayout from "../Auth/AuthLayout";
 
 const Login = () => {
   const navigate = useNavigate();
   // Destructure setUser so we can update the global app state
-  const { setUser } = useContext(UserContext); 
+  const { setUser } = useContext(UserContext);
   
   const [formData, setFormData] = useState({
     email: "",
@@ -14,6 +17,33 @@ const Login = () => {
   });
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [neonAuthEnabled, setNeonAuthEnabled] = useState(false);
+  const [neonAuthUrl, setNeonAuthUrl] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const fetchNeonConfig = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/auth/neon/config", {
+          headers: { "Accept": "application/json" },
+        });
+        const data = await res.json();
+        if (data.enabled && data.base_url) {
+          setNeonAuthEnabled(true);
+          setNeonAuthUrl(data.base_url);
+        }
+      } catch {
+        // ignore - offline mode
+      }
+    };
+    fetchNeonConfig();
+  }, []);
+
+  const handleGoogleSignIn = () => {
+    if (neonAuthUrl) {
+      window.location.href = `${neonAuthUrl}/sign-in/google`;
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,45 +99,77 @@ const Login = () => {
   };
 
   return (
+    <AuthLayout
+      title="Your finances, in one place."
+      description="Bring everyday accounts and long-term plans into a clearer view."
+      switchPrompt="New to WorthMe?"
+      switchLabel="Create account"
+      switchTo="/register"
+    >
     <div className="authbox">
-      <h2>Login</h2>
+      <div className="auth-heading">
+        <span className="auth-eyebrow">Welcome back</span>
+        <h2>Sign in</h2>
+        <p>Use your email and password to continue.</p>
+      </div>
 
-      {error && <div className="error-banner" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+      {error && <div className="error-banner" role="alert">{error}</div>}
+
+      <div className="auth-social">
+        <GoogleAuthButton enabled={neonAuthEnabled} onClick={handleGoogleSignIn} />
+        <div className="auth-divider"><span>or continue with email</span></div>
+      </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="inputs">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+        <div className="inputs auth-fields auth-login-fields">
+          <div className="auth-field">
+            <label htmlFor="login-email">Email address</label>
+            <input
+              id="login-email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="auth-field">
+            <label htmlFor="login-password">Password</label>
+            <div className="auth-password-control">
+              <input
+                id="login-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="auth-password-toggle"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="ctas">
-          <div className="action">
-            <span>Don’t have an account?</span>
-            <Link to="/register">Register Now</Link>
-          </div>
-          <button type="submit" className="authBtn" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Login"}
+          <button type="submit" className="authBtn auth-submit" disabled={isSubmitting}>
+            {isSubmitting ? "Signing in..." : "Sign in"}
           </button>
         </div>
       </form>
     </div>
+    </AuthLayout>
   );
 };
 

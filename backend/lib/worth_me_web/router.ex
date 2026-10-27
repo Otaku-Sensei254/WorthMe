@@ -30,6 +30,10 @@ defmodule WorthMeWeb.Router do
     post "/users/log_in", UserSessionController, :create
     delete "/users/log_out", UserSessionController, :delete
 
+    # Neon Auth / Google Sign In
+    post "/auth/neon/callback", NeonAuthController, :callback
+    get "/auth/neon/config", NeonAuthController, :config
+
     # M-Pesa Live Sync Routes
     post "/mpesa/sync", MpesaController, :sync
     get "/mpesa/status/:conversation_id", MpesaController, :status
@@ -43,6 +47,12 @@ defmodule WorthMeWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  scope "/", WorthMeWeb do
+    pipe_through :browser
+
+    get "/", PageController, :home
   end
 
   ## Authentication routes

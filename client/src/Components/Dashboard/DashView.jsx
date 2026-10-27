@@ -14,7 +14,7 @@ const DashboardView = () => {
   const [syncStatus, setSyncStatus] = useState(null); // 'requesting', 'polling', 'success', 'error'
   const [error, setError] = useState(null);
 
-  const firstName = user?.first_name || user?.name || user?.email || "there";
+  const firstName = user?.first_name ||  "there";
   const mpesa = trackedWallets.find((wallet) => wallet.key === "mpesa");
   const airtel = trackedWallets.find((wallet) => wallet.key === "airtel");
   const im = trackedWallets.find((wallet) => wallet.key === "im");
@@ -129,50 +129,39 @@ const DashboardView = () => {
     <div className="dashboard-view">
       <div className="dashboard-hero">
         <div className="dashboard-hero-content">
-          <p className="dashboard-eyebrow">Real-time wealth tracking</p>
-          <h2>Welcome back, {firstName}</h2>
+          <p className="dashboard-eyebrow">Portfolio Overview</p>
+          <h2>Welcome back, <em>{firstName}</em></h2>
           <p className="dashboard-copy">
-            Your current worth is derived from M-Pesa, Airtel Money, and I&M Bank statement balances.
+            All your wealth in one calm place. Real-time balances and statement insights across M-Pesa, Airtel Money, and bank accounts.
           </p>
           
-          <div className="sync-actions" style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <div className="sync-actions">
             <button 
               onClick={handleMpesaSync} 
               disabled={isSyncing}
               className={`sync-btn ${isSyncing ? 'syncing' : ''}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 20px',
-                backgroundColor: '#2db742',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: isSyncing ? 'not-allowed' : 'pointer',
-                fontWeight: '600'
-              }}
+              type="button"
             >
-              {isSyncing ? <Loader2 className="spin" size={18} /> : <RefreshCw size={18} />}
+              {isSyncing ? <Loader2 className="spin" size={16} /> : <RefreshCw size={16} />}
               {isSyncing ? 'Syncing M-Pesa...' : 'Sync M-Pesa Live'}
             </button>
 
             {syncStatus === 'success' && (
-              <span style={{ color: '#2db742', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <CheckCircle size={18} /> Synced!
+              <span className="sync-status success" role="status">
+                <CheckCircle size={16} /> Synced
               </span>
             )}
             {syncStatus === 'error' && (
-              <span style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <AlertCircle size={18} /> {error || 'Failed'}
+              <span className="sync-status error" role="alert">
+                <AlertCircle size={16} /> {error || 'Failed'}
               </span>
             )}
           </div>
         </div>
         <div className="dashboard-hero-actions">
-          <Link to="/profile" className="dashboard-hero-link">Open Profile</Link>
-          <Link to="/mpesa" className="dashboard-hero-link secondary">Upload Statement</Link>
+          <Link to="/mpesa" className="dashboard-hero-link">Upload Statement</Link>
           <Link to="/banks/connect/im" className="dashboard-hero-link secondary">Upload I&M</Link>
+          <Link to="/profile" className="dashboard-hero-link secondary">Profile</Link>
         </div>
       </div>
 
@@ -187,6 +176,7 @@ const DashboardView = () => {
           />
         ))}
       </div>
+
       <div className="spending-overview">
         <div className="spending-summary-card">
           <span>Total Spent</span>

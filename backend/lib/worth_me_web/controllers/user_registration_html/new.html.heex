@@ -1,0 +1,13 @@
+Register
+<a href="/users/log_in">Log in</a>
+<a href="/users/register">Register</a>
+<%= if @changeset.action do %>Oops, something went wrong! Please check the errors below.<% end %>
+<%= if @changeset.errors != [] do %>
+  <%= for {field, {msg, _opts}} <- @changeset.errors do %><%= if is_binary(msg), do: msg, else: "#{msg}" %><% end %>
+<% end %>
+<form action="/users/register" method="post">
+  <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
+  <input type="email" name="user[email]" />
+  <input type="password" name="user[password]" />
+  <button>Create an account</button>
+</form>

@@ -1,16 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import "./navbar.css";
 import { Link, useNavigate } from "react-router-dom";
-import { IoMenu, IoClose } from "react-icons/io5";
 import axios from "axios";
 import { UserContext } from "../../context/userContext";
+import StaggeredMenu from "./StaggeredMenu";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const { user, loading, fetchUser } = useContext(UserContext);
   const navigate = useNavigate();
-
-  const toggleMenu = () => setIsOpen(!isOpen);
 
   // Logout handler
   const handleLogout = async () => {
@@ -25,13 +22,25 @@ const Navbar = () => {
     }
   };
 
-  // Get Name Initials from email
-  const getInitials = () => {
-    if (!user) return "";
-    // The user object from the backend only has email
-    const email = user.email || "";
-    return (email[0] || "").toUpperCase();
+  const getFirstName = () => {
+    const storedName = user?.first_name || user?.name;
+    if (storedName?.trim()) return storedName.trim().split(/\s+/)[0];
+    return user?.email?.split("@")[0] || "Account";
   };
+
+  const mobileMenuItems = loading
+    ? []
+    : user
+      ? [
+          { label: "Dashboard", ariaLabel: "Open your dashboard", link: "/dashboard" },
+          { label: "Accounts", ariaLabel: "View your accounts", link: "/banks" },
+          { label: "Profile", ariaLabel: "Open your profile", link: "/profile" },
+          { label: "Log out", ariaLabel: "Log out of WorthMe", onClick: handleLogout },
+        ]
+      : [
+          { label: "Sign in", ariaLabel: "Sign in to WorthMe", link: "/login" },
+          { label: "Create account", ariaLabel: "Create a WorthMe account", link: "/register" },
+        ];
 
   return (
     <header className="navbar">
@@ -42,18 +51,10 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Hamburger and Close Icon */}
-      <div className="menu-icon" onClick={toggleMenu}>
-        {isOpen ? <IoClose size={30} /> : <IoMenu size={30} />}
-      </div>
-
       {/* Desktop Nav */}
       <nav className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/features">Features</Link>
-        <Link to="/dashboard">Dashboard</Link>
-        <Link to="/banks">Banks</Link>
+        {user && <Link to="/dashboard">Dashboard</Link>}
+        {user && <Link to="/banks">Accounts</Link>}
       </nav>
 
       {/* Desktop Auth / User */}
@@ -63,7 +64,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <Link to="/profile" className="profile-link" aria-label="Open profile">
-                  <div className="profile-circle">{getInitials()}</div>
+                  <span className="profile-name">{getFirstName()}</span>
                 </Link>
                 <button className="btn-1" onClick={handleLogout}>
                   Logout
@@ -83,56 +84,21 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
-        <nav>
-          <Link to="/" onClick={toggleMenu}>
-            Home
-          </Link>
-          <Link to="/about" onClick={toggleMenu}>
-            About
-          </Link>
-          <Link to="/features" onClick={toggleMenu}>
-            Features
-          </Link>
-          <Link to="/dashboard" onClick={toggleMenu}>
-            Dashboard
-          </Link>
-          <Link to="/banks" onClick={toggleMenu}>
-            Banks
-          </Link>
-        </nav>
-        <div className="auth-buttons-mobile">
-          {!loading && (
-            <>
-              {user ? (
-                <>
-                  <Link to="/profile" className="profile-link" onClick={toggleMenu}>
-                    <div className="profile-circle">{getInitials()}</div>
-                  </Link>
-                  <button
-                    className="btn-1"
-                    onClick={() => {
-                      toggleMenu();
-                      handleLogout();
-                    }}
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" className="btn-1" onClick={toggleMenu}>
-                    Sign In
-                  </Link>
-                  <Link to="/register" className="btn-2" onClick={toggleMenu}>
-                    Get Started
-                  </Link>
-                </>
-              )}
-            </>
-          )}
-        </div>
+      <div className="navbar-mobile-menu" aria-label="Mobile navigation">
+        <StaggeredMenu
+          position="right"
+          items={mobileMenuItems}
+          socialItems={[]}
+          displaySocials={false}
+          displayItemNumbering
+          menuButtonColor="#f7f5ef"
+          openMenuButtonColor="#f7f5ef"
+          changeMenuColorOnOpen={false}
+          colors={["#b99b62", "#1a1b17"]}
+          logoUrl=""
+          accentColor="#b99b62"
+          className="worthme-staggered-menu"
+        />
       </div>
     </header>
   );

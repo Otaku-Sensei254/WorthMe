@@ -27,7 +27,7 @@ defmodule WorthMeWeb do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: false] # Set to false since this is an API-focused project
+        layouts: [html: {WorthMeWeb.Layouts, :app}]
 
       import Plug.Conn
       import WorthMeWeb.Gettext

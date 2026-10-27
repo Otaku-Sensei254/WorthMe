@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, Navigate, useLocation } from "react-router-dom";
 
 // Pages & Components
 import Home from "./Components/Pages/Home";
@@ -9,10 +9,10 @@ import Register from "./Components/Pages/Register";
 import Dashboard from "./Components/Pages/Dashboard";
 import Login from "./Components/Pages/Login";
 import Navbar from "./Components/Navbar/Navbar";
+import Footer from "./Components/Footer/Footer";
+import InitialPageLoader from "./Components/InitialPageLoader";
 import BankConnect from "./banks/BankConnect";
 import Profile from "./Components/Pages/Profile";
-import About from "./Components/Pages/About";
-import Features from "./Components/Pages/Features";
 // Context & Protection
 import { UserProvider } from "./context/userContext";
 import { WealthProvider } from "./context/wealthContext";
@@ -25,10 +25,17 @@ import Banks from "./banks/Banks";
  * Layout component to wrap pages with a persistent Navbar
  */
 const Layout = () => {
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+
   return (
-    <div>
-      <Navbar />
-      <Outlet />
+    <div className={isDashboard ? "dashboard-shell-layout" : "public-shell-layout"}>
+      {!isDashboard && !isAuthPage && <Navbar />}
+      <div className="app-layout-content">
+        <Outlet />
+      </div>
+      {!isDashboard && !isAuthPage && <Footer />}
     </div>
   );
 };
@@ -48,11 +55,11 @@ const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <About />,
+        element: <Navigate to="/" replace />,
       },
       {
         path: "features",
-        element: <Features />,
+        element: <Navigate to="/#how-it-works" replace />,
       },
       {
         path: "dashboard",
@@ -78,7 +85,6 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      // ADD THIS NEW ROUTE:
       {
         path: "banks/connect/:bankId",
         element: (
@@ -88,9 +94,13 @@ const router = createBrowserRouter([
         ),
       },
       {
-       path: "/banks",
-       element: <Banks />,
-     },
+        path: "banks",
+        element: (
+          <ProtectedRoute>
+            <Banks />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "profile",
         element: (
@@ -99,15 +109,15 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
     ],
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
   },
 ]);
 
@@ -116,10 +126,10 @@ root.render(
   <React.StrictMode>
     <UserProvider>
       <WealthProvider>
-        {/* The RouterProvider provides the "Router Context"
-          needed by ProtectedRoute and Navigate
-        */}
-        <RouterProvider router={router} />
+        <>
+          <RouterProvider router={router} />
+          <InitialPageLoader />
+        </>
       </WealthProvider>
     </UserProvider>
   </React.StrictMode>

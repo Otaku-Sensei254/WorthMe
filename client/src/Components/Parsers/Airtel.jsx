@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo } from 'lucide-react';
 import '../styles/Airtel.css';
+import '../styles/ParserPages.css';
 import { WealthContext } from '../../context/wealthContext';
 import { formatMoney } from '../../utils/money';
 
@@ -87,17 +88,25 @@ const Airtel = () => {
                     requestDate: result.summary?.requestDate || '',
                 });
 
-                fetch('http://localhost:4000/api/statements', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        provider: 'airtel',
-                        summary: result.summary || {},
-                        transactions: result.transactions || [],
-                        meta: { source: 'pdf-upload' },
-                    })
-                }).catch(() => {});
+                try {
+                    const saveRes = await fetch('http://localhost:4000/api/statements', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            provider: 'airtel',
+                            summary: result.summary || {},
+                            transactions: result.transactions || [],
+                            meta: { source: 'pdf-upload' },
+                        })
+                    });
+                    if (!saveRes.ok) {
+                        const errBody = await saveRes.text();
+                        console.error('Failed to save airtel statement:', saveRes.status, errBody);
+                    }
+                } catch (err) {
+                    console.error('Failed to save airtel statement:', err);
+                }
             } else {
                 setError(result.error || 'Failed to parse Airtel statement.');
             }
@@ -119,19 +128,31 @@ const Airtel = () => {
     const worthValue = summary?.closingBalance || '0.00';
 
     return (
-        <div className="airtel-wrapper">
+        <div className="parser-page airtel-wrapper">
             {/* Header Section */}
-            <header className="airtel-header">
+            <header className="parser-page-header airtel-header">
                 <div className="airtel-icon-box"><FileText size={24} /></div>
-                <h1>Airtel Money <span>Statement</span></h1>
+                <div className="parser-page-heading">
+                    <span className="parser-page-eyebrow">MOBILE MONEY · STATEMENTS</span>
+                    <h1>Airtel Money statement</h1>
+                    <p>Review wallet activity and balances from your Airtel Money PDF.</p>
+                </div>
             </header>
 
             {/* Upload Section */}
-            <div className="airtel-card">
+            <section className="parser-upload-card airtel-card" aria-labelledby="airtel-upload-title">
+                <div className="parser-upload-heading">
+                    <div>
+                        <h2 id="airtel-upload-title">Upload a statement</h2>
+                        <p>Select a PDF statement to prepare your transaction overview.</p>
+                    </div>
+                    <span className="parser-file-type">PDF statement</span>
+                </div>
                 <form onSubmit={handleUpload} className="airtel-upload-grid">
                     <div className="airtel-input-group">
-                        <label>Airtel Money Statement (PDF)</label>
+                        <label htmlFor="airtel-statement-file">Statement PDF</label>
                         <input
+                            id="airtel-statement-file"
                             type="file"
                             accept=".pdf"
                             onChange={(e) => setFile(e.target.files[0])}
@@ -144,7 +165,7 @@ const Airtel = () => {
                     </button>
                 </form>
                 {error && <div className="airtel-error-msg"><AlertCircle size={18} /> {error}</div>}
-            </div>
+            </section>
 
             {/* Results Section */}
             {transactions && (
