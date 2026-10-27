@@ -12,7 +12,9 @@
 
 # production
 /build
-
+erl_crash.dump
+/Set up this app on Neon.txt
+/backend/README.md
 # misc
 .DS_Store
 .env.local
@@ -23,3 +25,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+discussions.md
+modifications.md
+Set up this app on Neon.txt
