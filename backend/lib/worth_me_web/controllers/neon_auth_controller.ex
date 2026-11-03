@@ -100,8 +100,7 @@ defmodule WorthMeWeb.NeonAuthController do
     expires_at = claims["exp"]
 
     is_integer(expires_at) and expires_at > System.system_time(:second) and
-      is_binary(claims["sub"]) and is_binary(claims["email"]) and
-      claims["emailVerified"] == true
+      is_binary(claims["sub"]) and is_binary(claims["email"])
   end
 
   defp find_or_create_user(user_info) do
