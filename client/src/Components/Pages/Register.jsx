@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import AuthLayout from "../Auth/AuthLayout";
-import { getNeonAuthUrl, startGoogleSignIn } from "../../auth/neonAuth";
+import { getNeonAuthUrl } from "../../auth/neonAuth";
+import { getAuthClient } from "../../lib/auth";
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const Register = () => {
@@ -40,7 +41,11 @@ const Register = () => {
     setIsGoogleSubmitting(true);
     setGoogleError("");
     try {
-      await startGoogleSignIn();
+      const authClient = await getAuthClient();
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: `${window.location.origin}/auth/neon/callback`,
+      });
     } catch (error) {
       setGoogleError(error.message || "Google sign-up is unavailable right now.");
       setIsGoogleSubmitting(false);

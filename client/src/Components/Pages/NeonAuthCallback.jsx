@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../Auth/AuthLayout";
 import { UserContext } from "../../context/userContext";
-import { completeGoogleSignIn } from "../../auth/neonAuth";
+import { getAuthClient } from "../../lib/auth";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
@@ -18,7 +18,14 @@ const NeonAuthCallback = () => {
 
     const completeSignIn = async () => {
       try {
-        const { token } = await completeGoogleSignIn();
+        const authClient = await getAuthClient();
+        const session = await authClient.getSession();
+
+        if (!session?.data?.session?.token || !session?.data?.user) {
+          throw new Error("Neon Auth did not find an active session. Please try again and allow cookies for the Neon Auth domain if your browser asks.");
+        }
+
+        const token = session.data.session.token;
 
         const response = await fetch(`${API_BASE}/api/auth/neon/callback`, {
           method: "POST",
