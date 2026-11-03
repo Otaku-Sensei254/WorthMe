@@ -45,8 +45,7 @@ defmodule WorthMe.Accounts.User do
     |> validate_email(opts)
     |> validate_password(opts)
     |> validate_required([:first_name, :last_name, :phone])
-    |> validate_length(:phone, min: 10, max: 10)
-    |> validate_format(:phone, ~r/^[0-9]+$/, message: "should only contain numbers")
+    |> validate_format(:phone, ~r/^(\+?254)?[0-9]{9}$/, message: "should be 9 digits (optionally prefixed with +254)")
   end
 
   defp validate_email(changeset, opts) do

@@ -64,7 +64,7 @@ const Register = () => {
         password: formData.password,
         first_name: formData.Fname,
         last_name: formData.Lname,
-        phone: formData.phone
+        phone: formData.phone ? `+254${formData.phone}` : ""
       }
     };
 
@@ -141,9 +141,12 @@ const Register = () => {
             {errors.email && <span className="error-text">{errors.email[0]}</span>}
           </div>
 
-          <div className="auth-field">
+           <div className="auth-field">
             <label htmlFor="register-phone">Phone number</label>
-            <input id="register-phone" type="tel" name="phone" autoComplete="tel" placeholder="e.g. 0712 345 678" value={formData.phone} onChange={handleChange} required />
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ padding: "0 8px", fontWeight: 600 }}>+254</span>
+              <input id="register-phone" type="tel" name="phone" autoComplete="tel" placeholder="712345678" value={formData.phone} onChange={handleChange} required />
+            </div>
             {errors.phone && <span className="error-text">{errors.phone[0]}</span>}
           </div>
 
