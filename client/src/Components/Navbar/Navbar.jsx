@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../../context/userContext";
 import StaggeredMenu from "./StaggeredMenu";
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const Navbar = () => {
   const { user, loading, fetchUser } = useContext(UserContext);

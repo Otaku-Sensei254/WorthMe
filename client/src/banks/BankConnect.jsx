@@ -4,7 +4,6 @@ import { ArrowLeft, Upload, FileText, Search, AlertCircle, Loader2, ShieldCheck,
 import '../Components/styles/BankConnect.css';
 import { WealthContext } from '../context/wealthContext';
 import { formatMoney } from '../utils/money';
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 
 // Minimal bank details, no more hardcoded columns

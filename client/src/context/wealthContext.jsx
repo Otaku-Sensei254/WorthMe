@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "./userContext";
-const API_BASE = process.env.REACT_APP_API_URL || "${API_BASE}";
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 export const  WealthContext = createContext();
 
@@ -218,7 +218,7 @@ export const WealthProvider = ({ children }) => {
     setIsBalanceHistoryLoading(true);
 
     try {
-      const response = await fetch(`\${API_BASE}/api/balance-snapshots?days=180`, {
+      const response = await fetch(`${API_BASE}/api/balance-snapshots?days=180`, {
         headers: { Accept: "application/json" },
         credentials: "include",
       });
@@ -247,7 +247,7 @@ export const WealthProvider = ({ children }) => {
 
     const persistSnapshots = async () => {
       try {
-        const response = await fetch(`\${API_BASE}/api/balance-snapshots`, {
+        const response = await fetch(`${API_BASE}/api/balance-snapshots`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           credentials: "include",
