@@ -24,7 +24,7 @@ const Register = () => {
   useEffect(() => {
     const fetchNeonConfig = async () => {
       try {
-        const res = await fetch(`\${API_BASE}/api/auth/neon/config`, {
+        const res = await fetch(`${API_BASE}/api/auth/neon/config`, {
           headers: { "Accept": "application/json" },
         });
         const data = await res.json();
@@ -69,7 +69,7 @@ const Register = () => {
 
     try {
       // 2. Point to Phoenix port (4000) and the API route we created
-      const res = await fetch(`\${API_BASE}/api/users/register`, {
+      const res = await fetch(`${API_BASE}/api/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -30,7 +30,7 @@ const Mpesa = () => {
         const load = async () => {
             if (transactions && transactions.length > 0) return;
             try {
-                const res = await fetch(`\${API_BASE}/api/statements/latest?provider=mpesa`, {
+                const res = await fetch(`${API_BASE}/api/statements/latest?provider=mpesa`, {
                     method: 'GET',
                     headers: { 'Accept': 'application/json' },
                     credentials: 'include',
@@ -106,7 +106,7 @@ const Mpesa = () => {
 
                 // Persist snapshot to Phoenix DB (no password stored).
                 try {
-                    const saveRes = await fetch(`\${API_BASE}/api/statements`, {
+                    const saveRes = await fetch(`${API_BASE}/api/statements`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         credentials: 'include',

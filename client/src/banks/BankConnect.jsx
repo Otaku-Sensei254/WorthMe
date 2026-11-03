@@ -71,7 +71,7 @@ const BankConnect = () => {
             if (!isImBank) return;
             if (transactions && transactions.length > 0) return;
             try {
-                const res = await fetch(`\${API_BASE}/api/statements/latest?provider=im`, {
+                const res = await fetch(`${API_BASE}/api/statements/latest?provider=im`, {
                     method: 'GET',
                     headers: { 'Accept': 'application/json' },
                     credentials: 'include',
@@ -171,7 +171,7 @@ const BankConnect = () => {
                         });
 
                         try {
-                            const saveRes = await fetch(`\${API_BASE}/api/statements`, {
+                            const saveRes = await fetch(`${API_BASE}/api/statements`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                                 credentials: 'include',

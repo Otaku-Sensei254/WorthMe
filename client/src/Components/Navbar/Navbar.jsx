@@ -12,7 +12,7 @@ const Navbar = () => {
   // Logout handler
   const handleLogout = async () => {
     try {
-      await axios.delete(`\${API_BASE}/api/users/log_out`, {
+      await axios.delete(`${API_BASE}/api/users/log_out`, {
         withCredentials: true,
       });
       fetchUser();

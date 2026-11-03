@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
     try {
       // 1. Corrected URL to /api/me
       // 2. Added credentials: "include" to send the Phoenix cookie
-      const res = await fetch(`\${API_BASE}/api/me`, {
+      const res = await fetch(`${API_BASE}/api/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

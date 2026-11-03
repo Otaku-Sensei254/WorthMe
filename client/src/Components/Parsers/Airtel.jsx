@@ -29,7 +29,7 @@ const Airtel = () => {
         const load = async () => {
             if (transactions && transactions.length > 0) return;
             try {
-                const res = await fetch(`\${API_BASE}/api/statements/latest?provider=airtel`, {
+                const res = await fetch(`${API_BASE}/api/statements/latest?provider=airtel`, {
                     method: 'GET',
                     headers: { 'Accept': 'application/json' },
                     credentials: 'include',
@@ -101,7 +101,7 @@ const Airtel = () => {
                 });
 
                 try {
-                    const saveRes = await fetch(`\${API_BASE}/api/statements`, {
+                    const saveRes = await fetch(`${API_BASE}/api/statements`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         credentials: 'include',
