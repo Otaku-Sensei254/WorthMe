@@ -4,6 +4,7 @@ import '../styles/Mpesa.css';
 import '../styles/ParserPages.css';
 import { WealthContext } from '../../context/wealthContext';
 import { formatMoney } from '../../utils/money';
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 
 const Mpesa = () => {
@@ -30,7 +31,7 @@ const Mpesa = () => {
         const load = async () => {
             if (transactions && transactions.length > 0) return;
             try {
-                const res = await fetch('http://localhost:4000/api/statements/latest?provider=mpesa', {
+                const res = await fetch(`\${API_BASE}/api/statements/latest?provider=mpesa`, {
                     method: 'GET',
                     headers: { 'Accept': 'application/json' },
                     credentials: 'include',
@@ -106,7 +107,7 @@ const Mpesa = () => {
 
                 // Persist snapshot to Phoenix DB (no password stored).
                 try {
-                    const saveRes = await fetch('http://localhost:4000/api/statements', {
+                    const saveRes = await fetch(`\${API_BASE}/api/statements`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         credentials: 'include',

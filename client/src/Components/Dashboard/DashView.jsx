@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { RefreshCw, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { formatMoney } from "../../utils/money";
 import { BalanceHistoryChart, MonthlyCashFlowChart } from "./FinancialCharts";
+const API_BASE = process.env.REACT_APP_API_URL || "${API_BASE}";
 
 const DashboardView = () => {
   const { user } = useContext(UserContext);
@@ -36,7 +37,7 @@ const DashboardView = () => {
 
     try {
       // 1. Send the sync request to Phoenix
-      const response = await fetch('http://localhost:4000/api/mpesa/sync', {
+      const response = await fetch(`\${API_BASE}/api/mpesa/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -62,7 +63,7 @@ const DashboardView = () => {
     const interval = setInterval(async () => {
       attempts++;
       try {
-        const response = await fetch(`http://localhost:4000/api/mpesa/status/${conversationId}`);
+        const response = await fetch(`${API_BASE}/api/mpesa/status/${conversationId}`);
         const result = await response.json();
 
         if (result.status === 'completed') {

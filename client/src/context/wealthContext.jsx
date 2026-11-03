@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "./userContext";
+const API_BASE = process.env.REACT_APP_API_URL || "${API_BASE}";
 
 export const  WealthContext = createContext();
 
@@ -87,7 +88,7 @@ export const WealthProvider = ({ children }) => {
       const providers = ["mpesa", "airtel", "im"];
 
       const fetchLatest = async (provider) => {
-        const res = await fetch(`http://localhost:4000/api/statements/latest?provider=${provider}`, {
+        const res = await fetch(`${API_BASE}/api/statements/latest?provider=${provider}`, {
           method: "GET",
           headers: { Accept: "application/json" },
           credentials: "include",
@@ -217,7 +218,7 @@ export const WealthProvider = ({ children }) => {
     setIsBalanceHistoryLoading(true);
 
     try {
-      const response = await fetch("http://localhost:4000/api/balance-snapshots?days=180", {
+      const response = await fetch(`\${API_BASE}/api/balance-snapshots?days=180`, {
         headers: { Accept: "application/json" },
         credentials: "include",
       });
@@ -246,7 +247,7 @@ export const WealthProvider = ({ children }) => {
 
     const persistSnapshots = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/balance-snapshots", {
+        const response = await fetch(`\${API_BASE}/api/balance-snapshots`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           credentials: "include",

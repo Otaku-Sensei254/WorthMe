@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 export const UserContext = createContext();
 
@@ -17,7 +18,7 @@ export const UserProvider = ({ children }) => {
     try {
       // 1. Corrected URL to /api/me
       // 2. Added credentials: "include" to send the Phoenix cookie
-      const res = await fetch("http://localhost:4000/api/me", {
+      const res = await fetch(`\${API_BASE}/api/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
