@@ -24,6 +24,7 @@ import {
   Landmark,
 } from "lucide-react";
 import "../styles/dashboard.css";
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const Sidebar = ({ activeSection, setActiveSection, isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) => {
   const { user, fetchUser } = useContext(UserContext);
