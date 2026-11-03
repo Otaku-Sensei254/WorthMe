@@ -2,7 +2,7 @@ defmodule WorthMeWeb.UserController do
   use WorthMeWeb, :controller
 
   # This endpoint only works if the user is logged in
-def show(conn, _params) do
+  def show(conn, _params) do
     case conn.assigns[:current_user] do
       nil ->
         conn
@@ -14,7 +14,8 @@ def show(conn, _params) do
           id: user.id,
           email: user.email,
           first_name: user.first_name,
-          last_name: user.last_name
+          last_name: user.last_name,
+          phone: user.phone
         })
     end
   end

@@ -76,13 +76,24 @@ const Airtel = () => {
             if (result.success) {
                 setTransactions(result.transactions);
                 setSummary(result.summary || null);
+                const uniqueTxns = (result.transactions || []).reduce((acc, tx) => {
+                    const receipt = tx.id || tx.ref || tx.receiptNo;
+                    const key = receipt && receipt.trim() && receipt !== ''
+                        ? receipt.trim()
+                        : `${tx.date || tx.transactionDate}|${tx.description || tx.details}|${tx.credit}|${tx.debit}`;
+                    if (!acc.seen.has(key)) {
+                        acc.seen.add(key);
+                        acc.items.push(tx);
+                    }
+                    return acc;
+                }, { seen: new Set(), items: [] }).items;
                 saveWalletSnapshot('airtel', {
                     provider: 'Airtel Money',
                     label: 'Airtel Wallet',
                     worth: result.summary?.closingBalance || '0.00',
                     balance: result.summary?.closingBalance || '0.00',
                     summary: result.summary || null,
-                    transactions: result.transactions || [],
+                    transactions: uniqueTxns,
                     customerName: result.summary?.customerName || '',
                     statementPeriod: result.summary?.statementPeriod || '',
                     requestDate: result.summary?.requestDate || '',

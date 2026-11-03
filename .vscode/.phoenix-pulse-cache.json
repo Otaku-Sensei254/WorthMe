@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "timestamp": 1793101880251,
+  "timestamp": 1793685326651,
   "workspaceRoot": "/home/dtech/Projects/WebWorks/Products/WorthMe",
   "registries": {
     "components": {
@@ -254,9 +254,30 @@
               ]
             }
           ]
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/components/layouts.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html.ex",
+          []
         ]
       ],
-      "fileHashes": {},
+      "fileHashes": {
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/components/layouts.ex": "ee7bd18e0b3ca15e6834f84084ca7e39fa6d8d61",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html.ex": "a9f9a6ccf81e2db4b340f518efb52c549270d3ec",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html.ex": "05d22528e602f955fdc8bc48d3ef6988343d9a32",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html.ex": "105c45952176ecec4fbaa8a7f6eda4d1696c87d5"
+      },
       "workspaceRoot": "/home/dtech/Projects/WebWorks/Products/WorthMe"
     },
     "schemas": {
@@ -373,32 +394,6 @@
                 "type": "id"
               },
               {
-                "name": "amount",
-                "type": "decimal"
-              },
-              {
-                "name": "currency",
-                "type": "string"
-              },
-              {
-                "name": "source",
-                "type": "string"
-              },
-              {
-                "name": "snapshot_at",
-                "type": "naive_datetime"
-              },
-              {
-                "name": "account",
-                "type": "assoc",
-                "elixirType": "WorthMe.FinancialData.FinancialAccount"
-              },
-              {
-                "name": "import",
-                "type": "assoc",
-                "elixirType": "WorthMe.FinancialData.StatementImport"
-              },
-              {
                 "name": "inserted_at",
                 "type": "naive_datetime"
               },
@@ -411,7 +406,7 @@
             "associationsDetailed": [],
             "aliases": {},
             "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/balance_snapshot.ex",
-            "line": 8
+            "line": 9
           }
         ],
         [
@@ -423,51 +418,6 @@
               {
                 "name": "id",
                 "type": "id"
-              },
-              {
-                "name": "account_type",
-                "type": "string"
-              },
-              {
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "name": "currency",
-                "type": "string"
-              },
-              {
-                "name": "status",
-                "type": "string"
-              },
-              {
-                "name": "metadata",
-                "type": "map"
-              },
-              {
-                "name": "user",
-                "type": "assoc",
-                "elixirType": "WorthMe.Accounts.User"
-              },
-              {
-                "name": "institution",
-                "type": "assoc",
-                "elixirType": "WorthMe.FinancialData.FinancialInstitution"
-              },
-              {
-                "name": "statement_imports",
-                "type": "list",
-                "elixirType": "WorthMe.FinancialData.StatementImport"
-              },
-              {
-                "name": "transactions",
-                "type": "list",
-                "elixirType": "WorthMe.FinancialData.Transaction"
-              },
-              {
-                "name": "balance_snapshots",
-                "type": "list",
-                "elixirType": "WorthMe.FinancialData.BalanceSnapshot"
               },
               {
                 "name": "inserted_at",
@@ -482,7 +432,7 @@
             "associationsDetailed": [],
             "aliases": {},
             "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_account.ex",
-            "line": 8
+            "line": 16
           }
         ],
         [
@@ -537,7 +487,7 @@
             "associationsDetailed": [],
             "aliases": {},
             "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_institution.ex",
-            "line": 8
+            "line": 9
           }
         ],
         [
@@ -549,62 +499,6 @@
               {
                 "name": "id",
                 "type": "id"
-              },
-              {
-                "name": "provider",
-                "type": "string"
-              },
-              {
-                "name": "source",
-                "type": "string"
-              },
-              {
-                "name": "file_hash",
-                "type": "string"
-              },
-              {
-                "name": "statement_period",
-                "type": "string"
-              },
-              {
-                "name": "status",
-                "type": "string"
-              },
-              {
-                "name": "summary",
-                "type": "map"
-              },
-              {
-                "name": "error",
-                "type": "map"
-              },
-              {
-                "name": "transaction_count",
-                "type": "integer"
-              },
-              {
-                "name": "completed_at",
-                "type": "naive_datetime"
-              },
-              {
-                "name": "account",
-                "type": "assoc",
-                "elixirType": "WorthMe.FinancialData.FinancialAccount"
-              },
-              {
-                "name": "user",
-                "type": "assoc",
-                "elixirType": "WorthMe.Accounts.User"
-              },
-              {
-                "name": "transactions",
-                "type": "list",
-                "elixirType": "WorthMe.FinancialData.Transaction"
-              },
-              {
-                "name": "balance_snapshots",
-                "type": "list",
-                "elixirType": "WorthMe.FinancialData.BalanceSnapshot"
               },
               {
                 "name": "inserted_at",
@@ -619,7 +513,7 @@
             "associationsDetailed": [],
             "aliases": {},
             "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/statement_import.ex",
-            "line": 8
+            "line": 11
           }
         ],
         [
@@ -699,7 +593,7 @@
             "associationsDetailed": [],
             "aliases": {},
             "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/transaction.ex",
-            "line": 8
+            "line": 9
           }
         ],
         [
@@ -940,32 +834,6 @@
                   "type": "id"
                 },
                 {
-                  "name": "amount",
-                  "type": "decimal"
-                },
-                {
-                  "name": "currency",
-                  "type": "string"
-                },
-                {
-                  "name": "source",
-                  "type": "string"
-                },
-                {
-                  "name": "snapshot_at",
-                  "type": "naive_datetime"
-                },
-                {
-                  "name": "account",
-                  "type": "assoc",
-                  "elixirType": "WorthMe.FinancialData.FinancialAccount"
-                },
-                {
-                  "name": "import",
-                  "type": "assoc",
-                  "elixirType": "WorthMe.FinancialData.StatementImport"
-                },
-                {
                   "name": "inserted_at",
                   "type": "naive_datetime"
                 },
@@ -978,7 +846,7 @@
               "associationsDetailed": [],
               "aliases": {},
               "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/balance_snapshot.ex",
-              "line": 8
+              "line": 9
             }
           ]
         ],
@@ -994,51 +862,6 @@
                   "type": "id"
                 },
                 {
-                  "name": "account_type",
-                  "type": "string"
-                },
-                {
-                  "name": "name",
-                  "type": "string"
-                },
-                {
-                  "name": "currency",
-                  "type": "string"
-                },
-                {
-                  "name": "status",
-                  "type": "string"
-                },
-                {
-                  "name": "metadata",
-                  "type": "map"
-                },
-                {
-                  "name": "user",
-                  "type": "assoc",
-                  "elixirType": "WorthMe.Accounts.User"
-                },
-                {
-                  "name": "institution",
-                  "type": "assoc",
-                  "elixirType": "WorthMe.FinancialData.FinancialInstitution"
-                },
-                {
-                  "name": "statement_imports",
-                  "type": "list",
-                  "elixirType": "WorthMe.FinancialData.StatementImport"
-                },
-                {
-                  "name": "transactions",
-                  "type": "list",
-                  "elixirType": "WorthMe.FinancialData.Transaction"
-                },
-                {
-                  "name": "balance_snapshots",
-                  "type": "list",
-                  "elixirType": "WorthMe.FinancialData.BalanceSnapshot"
-                },
-                {
                   "name": "inserted_at",
                   "type": "naive_datetime"
                 },
@@ -1051,7 +874,7 @@
               "associationsDetailed": [],
               "aliases": {},
               "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_account.ex",
-              "line": 8
+              "line": 16
             }
           ]
         ],
@@ -1108,7 +931,7 @@
               "associationsDetailed": [],
               "aliases": {},
               "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_institution.ex",
-              "line": 8
+              "line": 9
             }
           ]
         ],
@@ -1124,62 +947,6 @@
                   "type": "id"
                 },
                 {
-                  "name": "provider",
-                  "type": "string"
-                },
-                {
-                  "name": "source",
-                  "type": "string"
-                },
-                {
-                  "name": "file_hash",
-                  "type": "string"
-                },
-                {
-                  "name": "statement_period",
-                  "type": "string"
-                },
-                {
-                  "name": "status",
-                  "type": "string"
-                },
-                {
-                  "name": "summary",
-                  "type": "map"
-                },
-                {
-                  "name": "error",
-                  "type": "map"
-                },
-                {
-                  "name": "transaction_count",
-                  "type": "integer"
-                },
-                {
-                  "name": "completed_at",
-                  "type": "naive_datetime"
-                },
-                {
-                  "name": "account",
-                  "type": "assoc",
-                  "elixirType": "WorthMe.FinancialData.FinancialAccount"
-                },
-                {
-                  "name": "user",
-                  "type": "assoc",
-                  "elixirType": "WorthMe.Accounts.User"
-                },
-                {
-                  "name": "transactions",
-                  "type": "list",
-                  "elixirType": "WorthMe.FinancialData.Transaction"
-                },
-                {
-                  "name": "balance_snapshots",
-                  "type": "list",
-                  "elixirType": "WorthMe.FinancialData.BalanceSnapshot"
-                },
-                {
                   "name": "inserted_at",
                   "type": "naive_datetime"
                 },
@@ -1192,7 +959,7 @@
               "associationsDetailed": [],
               "aliases": {},
               "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/statement_import.ex",
-              "line": 8
+              "line": 11
             }
           ]
         ],
@@ -1274,7 +1041,7 @@
               "associationsDetailed": [],
               "aliases": {},
               "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/transaction.ex",
-              "line": 8
+              "line": 9
             }
           ]
         ],
@@ -1405,11 +1172,11 @@
       "fileHashes": {
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/accounts/user.ex": "ee66d28289c687ce44ae4c387e36fe29b181c869",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/accounts/user_token.ex": "c05393485e057b7677fe3caa373f28575b738533",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/balance_snapshot.ex": "a834ff49f5810afe7a873fd33ae9520bf944011d",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_account.ex": "982d3fbb8b7faeaa3fbda8c19103baedbf221def",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_institution.ex": "6d761eb0f9ebf6632d4b0ca4cc220c946e15fab9",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/statement_import.ex": "e403f9acb32ce4d2acc963b8146df3d1667d837e",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/transaction.ex": "122fd2d00fc7c3171a3b287febc74d4dfae56809",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/balance_snapshot.ex": "77b1ab6ca144829a636a643d7929eb5d88ffc4b1",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_account.ex": "ff23ddebb3e4f8aee8f31d9b774c48223b0c77de",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/financial_institution.ex": "a4dfd97a774126df85c047b6195e639be5a9df81",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/statement_import.ex": "7cc1c08e682fcffadf6bf50bf3b7949161393ad0",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/financial_data/transaction.ex": "fae4a84f0fd5404f8fd179939c84845d255c25e1",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/statements/statement.ex": "83dc8da07699cec8d0861cda881811ef1b8157b5",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me/statements/transaction.ex": "ed9c1c702f8d38389ecee42203f805042bd9c110"
       },
@@ -1426,7 +1193,7 @@
           "verb": "GET",
           "path": "/api/me",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 25,
+          "line": 24,
           "controller": "UserController",
           "action": "show",
           "helperBase": "me",
@@ -1439,7 +1206,7 @@
           "verb": "POST",
           "path": "/api/statements",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 26,
+          "line": 25,
           "controller": "StatementController",
           "action": "create",
           "helperBase": "statement",
@@ -1452,7 +1219,7 @@
           "verb": "GET",
           "path": "/api/statements/latest",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 27,
+          "line": 26,
           "controller": "StatementController",
           "action": "latest",
           "helperBase": "statement_latest",
@@ -1462,10 +1229,49 @@
           "scopePath": "/api"
         },
         {
+          "verb": "GET",
+          "path": "/api/balance-snapshots",
+          "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 27,
+          "controller": "BalanceSnapshotController",
+          "action": "index",
+          "helperBase": "balance_snapshot",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "POST",
+          "path": "/api/balance-snapshots",
+          "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 28,
+          "controller": "BalanceSnapshotController",
+          "action": "create",
+          "helperBase": "balance_snapshot",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "GET",
+          "path": "/api/market-watch",
+          "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 29,
+          "controller": "MarketDataController",
+          "action": "index",
+          "helperBase": "market_watch",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
           "verb": "POST",
           "path": "/api/users/register",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 29,
+          "line": 31,
           "controller": "UserRegistrationController",
           "action": "create",
           "helperBase": "user_register",
@@ -1478,7 +1284,7 @@
           "verb": "POST",
           "path": "/api/users/log_in",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 30,
+          "line": 32,
           "controller": "UserSessionController",
           "action": "create",
           "helperBase": "user_log_in",
@@ -1491,7 +1297,7 @@
           "verb": "DELETE",
           "path": "/api/users/log_out",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 31,
+          "line": 33,
           "controller": "UserSessionController",
           "action": "delete",
           "helperBase": "user_log_out",
@@ -1502,9 +1308,35 @@
         },
         {
           "verb": "POST",
+          "path": "/api/auth/neon/callback",
+          "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 36,
+          "controller": "NeonAuthController",
+          "action": "callback",
+          "helperBase": "auth_neon_callback",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "GET",
+          "path": "/api/auth/neon/config",
+          "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 37,
+          "controller": "NeonAuthController",
+          "action": "config",
+          "helperBase": "auth_neon_config",
+          "params": [],
+          "isResource": false,
+          "pipeline": "api",
+          "scopePath": "/api"
+        },
+        {
+          "verb": "POST",
           "path": "/api/mpesa/sync",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 34,
+          "line": 40,
           "controller": "MpesaController",
           "action": "sync",
           "helperBase": "mpesa_sync",
@@ -1517,7 +1349,7 @@
           "verb": "GET",
           "path": "/api/mpesa/status/:conversation_id",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 35,
+          "line": 41,
           "controller": "MpesaController",
           "action": "status",
           "helperBase": "mpesa_statu",
@@ -1532,7 +1364,7 @@
           "verb": "FORWARD",
           "path": "/dev/mailbox",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 44,
+          "line": 50,
           "forwardTo": "Plug.Swoosh.MailboxPreview",
           "helperBase": "mailbox",
           "params": [],
@@ -1541,9 +1373,21 @@
         },
         {
           "verb": "GET",
+          "path": "/",
+          "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
+          "line": 57,
+          "controller": "PageController",
+          "action": "home",
+          "helperBase": "root",
+          "params": [],
+          "isResource": false,
+          "pipeline": "browser"
+        },
+        {
+          "verb": "GET",
           "path": "/users/register",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 53,
+          "line": 65,
           "controller": "UserRegistrationController",
           "action": "new",
           "helperBase": "user_register",
@@ -1554,7 +1398,7 @@
           "verb": "POST",
           "path": "/users/register",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 54,
+          "line": 66,
           "controller": "UserRegistrationController",
           "action": "create",
           "helperBase": "user_register",
@@ -1565,7 +1409,7 @@
           "verb": "GET",
           "path": "/users/log_in",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 55,
+          "line": 67,
           "controller": "UserSessionController",
           "action": "new",
           "helperBase": "user_log_in",
@@ -1576,7 +1420,7 @@
           "verb": "POST",
           "path": "/users/log_in",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 56,
+          "line": 68,
           "controller": "UserSessionController",
           "action": "create",
           "helperBase": "user_log_in",
@@ -1587,7 +1431,7 @@
           "verb": "GET",
           "path": "/users/reset_password",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 57,
+          "line": 69,
           "controller": "UserResetPasswordController",
           "action": "new",
           "helperBase": "user_reset_password",
@@ -1598,7 +1442,7 @@
           "verb": "POST",
           "path": "/users/reset_password",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 58,
+          "line": 70,
           "controller": "UserResetPasswordController",
           "action": "create",
           "helperBase": "user_reset_password",
@@ -1609,7 +1453,7 @@
           "verb": "GET",
           "path": "/users/reset_password/:token",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 59,
+          "line": 71,
           "controller": "UserResetPasswordController",
           "action": "edit",
           "helperBase": "user_reset_password",
@@ -1622,7 +1466,7 @@
           "verb": "PUT",
           "path": "/users/reset_password/:token",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 60,
+          "line": 72,
           "controller": "UserResetPasswordController",
           "action": "update",
           "helperBase": "user_reset_password",
@@ -1635,7 +1479,7 @@
           "verb": "GET",
           "path": "/users/settings",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 66,
+          "line": 78,
           "controller": "UserSettingsController",
           "action": "edit",
           "helperBase": "user_setting",
@@ -1646,7 +1490,7 @@
           "verb": "PUT",
           "path": "/users/settings",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 67,
+          "line": 79,
           "controller": "UserSettingsController",
           "action": "update",
           "helperBase": "user_setting",
@@ -1657,7 +1501,7 @@
           "verb": "GET",
           "path": "/users/settings/confirm_email/:token",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 68,
+          "line": 80,
           "controller": "UserSettingsController",
           "action": "confirm_email",
           "helperBase": "user_setting_confirm_email",
@@ -1670,7 +1514,7 @@
           "verb": "DELETE",
           "path": "/users/log_out",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 74,
+          "line": 86,
           "controller": "UserSessionController",
           "action": "delete",
           "helperBase": "user_log_out",
@@ -1681,7 +1525,7 @@
           "verb": "GET",
           "path": "/users/confirm",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 75,
+          "line": 87,
           "controller": "UserConfirmationController",
           "action": "new",
           "helperBase": "user_confirm",
@@ -1692,7 +1536,7 @@
           "verb": "POST",
           "path": "/users/confirm",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 76,
+          "line": 88,
           "controller": "UserConfirmationController",
           "action": "create",
           "helperBase": "user_confirm",
@@ -1703,7 +1547,7 @@
           "verb": "GET",
           "path": "/users/confirm/:token",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 77,
+          "line": 89,
           "controller": "UserConfirmationController",
           "action": "edit",
           "helperBase": "user_confirm",
@@ -1716,7 +1560,7 @@
           "verb": "POST",
           "path": "/users/confirm/:token",
           "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex",
-          "line": 78,
+          "line": 90,
           "controller": "UserConfirmationController",
           "action": "update",
           "helperBase": "user_confirm",
@@ -1727,14 +1571,30 @@
         }
       ],
       "fileHashes": {
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex": "95f6a4f5ba7c78b3881f71059e156800c412aaeb"
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/router.ex": "6798729df469bab68df2dbda1ed83f15415ccecb"
       },
       "workspaceRoot": "/home/dtech/Projects/WebWorks/Products/WorthMe"
     },
     "controllers": {
       "rendersByFile": [
         [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/balance_snapshot_controller.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/market_data_controller.ex",
+          []
+        ],
+        [
           "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/mpesa_controller.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/neon_auth_controller.ex",
+          []
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_controller.ex",
           []
         ],
         [
@@ -1799,7 +1659,18 @@
                 }
               ],
               "actionBody": "  def new(conn, _params) do\n    changeset = Accounts.change_user_registration(%User{})\n    render(conn, :new, changeset: changeset)\n  end",
-              "line": 12
+              "line": 11,
+              "templatePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex"
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserRegistrationController",
+              "controllerFile": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex",
+              "action": "create",
+              "templateName": "changeset: changeset",
+              "assigns": [],
+              "assignsWithTypes": [],
+              "actionBody": "  def create(conn, %{\"user\" => user_params}) do\n    case Accounts.register_user(user_params) do\n      {:ok, user} ->\n        case Phoenix.Controller.get_format(conn) do\n          \"json\" ->\n            conn\n            |> put_status(:created)\n            |> json(%{\n              message: \"User created successfully\",\n              user: %{id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name}\n            })\n\n        _ ->\n          conn = UserAuth.log_in_user(conn, user, %{})\n          if conn.state == :sent do\n            conn\n          else\n            conn\n            |> put_status(:created)\n            |> json(%{\n              message: \"User created successfully\",\n              user: %{id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name}\n            })\n          end\n        end\n\n      {:error, %Ecto.Changeset{} = changeset} ->\n        case Phoenix.Controller.get_format(conn) do\n          \"json\" ->\n            errors = Ecto.Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)\n            conn\n            |> put_status(:unprocessable_entity)\n            |> json(%{errors: errors})\n\n          _ ->\n            conn\n            |> put_status(:ok)\n            |> put_flash(:error, \"Oops, something went wrong! Please check the errors below.\")\n            |> render(:new, changeset: changeset)\n        end\n    end\n  end",
+              "line": 52
             }
           ]
         ],
@@ -1858,7 +1729,36 @@
         ],
         [
           "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex",
-          []
+          [
+            {
+              "controllerModule": "WorthMeWeb.UserSessionController",
+              "controllerFile": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex",
+              "action": "new",
+              "templateName": "new",
+              "assigns": [
+                "error_message"
+              ],
+              "assignsWithTypes": [
+                {
+                  "name": "error_message",
+                  "variableName": "nil"
+                }
+              ],
+              "actionBody": "  def new(conn, _params) do\n    render(conn, :new, error_message: nil)\n  end",
+              "line": 8,
+              "templatePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex"
+            },
+            {
+              "controllerModule": "WorthMeWeb.UserSessionController",
+              "controllerFile": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex",
+              "action": "create",
+              "templateName": "error_message: \"Invalid email or password\"",
+              "assigns": [],
+              "assignsWithTypes": [],
+              "actionBody": "  def create(conn, %{\"user\" => %{\"email\" => email, \"password\" => password} = user_params}) do\n    if user = Accounts.get_user_by_email_and_password(email, password) do\n      conn = UserAuth.log_in_user(conn, user, user_params)\n      if conn.state == :sent do\n        conn\n      else\n        if json_request?(conn) do\n          conn\n          |> put_status(:ok)\n          |> json(%{\n            message: \"Logged in successfully\",\n            user: %{\n              id: user.id,\n              email: user.email,\n              first_name: user.first_name,\n              last_name: user.last_name\n            }\n          })\n        else\n          conn\n          |> put_flash(:info, \"Welcome back!\")\n          |> redirect(to: \"/\")\n        end\n      end\n    else\n      if json_request?(conn) do\n        conn\n        |> put_status(:unauthorized)\n        |> json(%{error: \"Invalid email or password\"})\n      else\n        conn\n        |> put_flash(:error, \"Invalid email or password\")\n        |> put_status(:unprocessable_entity)\n        |> render(:new, error_message: \"Invalid email or password\")\n      end\n    end\n  end",
+              "line": 47
+            }
+          ]
         ],
         [
           "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex",
@@ -1910,24 +1810,166 @@
           ]
         ]
       ],
-      "templateSummaries": [],
+      "templateSummaries": [
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex",
+          {
+            "templatePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex",
+            "assignSources": {},
+            "controllers": [
+              {
+                "controllerModule": "WorthMeWeb.UserRegistrationController",
+                "controllerFile": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex",
+                "action": "new",
+                "templateName": "new",
+                "assigns": [
+                  "changeset"
+                ],
+                "assignsWithTypes": [
+                  {
+                    "name": "changeset",
+                    "variableName": "changeset",
+                    "typeInfo": {
+                      "kind": "struct",
+                      "module": "User"
+                    }
+                  }
+                ],
+                "actionBody": "  def new(conn, _params) do\n    changeset = Accounts.change_user_registration(%User{})\n    render(conn, :new, changeset: changeset)\n  end",
+                "line": 11,
+                "templatePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex"
+              }
+            ]
+          }
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex",
+          {
+            "templatePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex",
+            "assignSources": {},
+            "controllers": [
+              {
+                "controllerModule": "WorthMeWeb.UserSessionController",
+                "controllerFile": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex",
+                "action": "new",
+                "templateName": "new",
+                "assigns": [
+                  "error_message"
+                ],
+                "assignsWithTypes": [
+                  {
+                    "name": "error_message",
+                    "variableName": "nil"
+                  }
+                ],
+                "actionBody": "  def new(conn, _params) do\n    render(conn, :new, error_message: nil)\n  end",
+                "line": 8,
+                "templatePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex"
+              }
+            ]
+          }
+        ]
+      ],
       "fileHashes": {
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/balance_snapshot_controller.ex": "644e81701a0213e7ee247daea16742070e3da670",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/market_data_controller.ex": "ee93de057ab47443a81fb33de959695b0370e9ac",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/mpesa_controller.ex": "aae4538f8fbb41970ae20f9ff2863ce2bc06016d",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/neon_auth_controller.ex": "5e128168350d0cdff7a898f52f025f85c379e4a9",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_controller.ex": "7dfcf82d750600a9d19a3ec62f1eeb84951a6d7c",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/statement_controller.ex": "55f4bc9d997f48251408e43a0ed11d90cfcd613e",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_confirmation_controller.ex": "376132e56fae6614b58e4c3306e7f4aec298daa9",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_controller.ex": "787a90c67bcd66092a76107b2f3d1bab8c7b4586",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex": "ae86a2e322830476f59da3cb8fc77211b7c6df6c",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_controller.ex": "e76518f0d7bb66cc67c6d761dbe199c3d1ff10ec",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_controller.ex": "b9419880971ff5f989debf2fe82937a8e556bf69",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_reset_password_controller.ex": "9a4a176e787f2201fbdd6e84926536d829302c60",
-        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex": "e7932e946f42e709a2ac672254cf0892edaf1048",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_controller.ex": "24ea2723c3dee50049fb51b8972f03d178fcecc1",
         "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_settings_controller.ex": "4004276399784adffef31ebe7706c1f4025293c3"
       },
       "workspaceRoot": "/home/dtech/Projects/WebWorks/Products/WorthMe"
     },
     "templates": {
-      "templatesByModule": [],
-      "templatesByPath": [],
-      "moduleByFile": [],
-      "fileHashes": {},
+      "templatesByModule": [
+        [
+          "WorthMeWeb.PageHTML",
+          [
+            {
+              "moduleName": "WorthMeWeb.PageHTML",
+              "name": "home",
+              "format": "html",
+              "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html/home.html.heex"
+            }
+          ]
+        ],
+        [
+          "WorthMeWeb.UserRegistrationHTML",
+          [
+            {
+              "moduleName": "WorthMeWeb.UserRegistrationHTML",
+              "name": "new",
+              "format": "html",
+              "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex"
+            }
+          ]
+        ],
+        [
+          "WorthMeWeb.UserSessionHTML",
+          [
+            {
+              "moduleName": "WorthMeWeb.UserSessionHTML",
+              "name": "new",
+              "format": "html",
+              "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex"
+            }
+          ]
+        ]
+      ],
+      "templatesByPath": [
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html/home.html.heex",
+          {
+            "moduleName": "WorthMeWeb.PageHTML",
+            "name": "home",
+            "format": "html",
+            "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html/home.html.heex"
+          }
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex",
+          {
+            "moduleName": "WorthMeWeb.UserRegistrationHTML",
+            "name": "new",
+            "format": "html",
+            "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html/new.html.heex"
+          }
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex",
+          {
+            "moduleName": "WorthMeWeb.UserSessionHTML",
+            "name": "new",
+            "format": "html",
+            "filePath": "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html/new.html.heex"
+          }
+        ]
+      ],
+      "moduleByFile": [
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html.ex",
+          "WorthMeWeb.PageHTML"
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html.ex",
+          "WorthMeWeb.UserRegistrationHTML"
+        ],
+        [
+          "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html.ex",
+          "WorthMeWeb.UserSessionHTML"
+        ]
+      ],
+      "fileHashes": {
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/page_html.ex": "a9f9a6ccf81e2db4b340f518efb52c549270d3ec",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_registration_html.ex": "05d22528e602f955fdc8bc48d3ef6988343d9a32",
+        "/home/dtech/Projects/WebWorks/Products/WorthMe/backend/lib/worth_me_web/controllers/user_session_html.ex": "105c45952176ecec4fbaa8a7f6eda4d1696c87d5"
+      },
       "workspaceRoot": "/home/dtech/Projects/WebWorks/Products/WorthMe"
     },
     "liveview": {

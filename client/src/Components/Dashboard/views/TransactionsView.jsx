@@ -14,52 +14,77 @@ const TransactionsView = () => {
   const allTransactions = useMemo(() => {
     const list = [];
     const wallets = wealthState?.wallets || {};
+    const seen = new Set();
 
     // M-Pesa
     (wallets.mpesa?.transactions || []).forEach((tx) => {
-      const isPaidIn = Boolean(tx.paidIn && normalizeMoney(tx.paidIn) > 0);
-      const isPaidOut = Boolean(tx.paidOut && normalizeMoney(tx.paidOut) > 0);
+      const paidIn = tx.paidIn ?? tx.credit ?? tx.amountPaidIn;
+      const paidOut = tx.paidOut ?? tx.withdrawn ?? tx.debit ?? tx.amountWithdrawn;
+      const isPaidIn = Boolean(normalizeMoney(paidIn) > 0);
+      const isPaidOut = Boolean(normalizeMoney(paidOut) > 0);
+      const receiptNo = tx.receiptNo || tx.ref || tx.id;
+      const key = receiptNo && receiptNo !== "—" && receiptNo.trim() !== "" 
+        ? `mpesa:${receiptNo}` 
+        : `mpesa:${tx.completionTime || tx.date}:${paidIn}:${paidOut}:${tx.details || tx.transactionNarrative}`;
+      if (seen.has(key)) return;
+      seen.add(key);
       list.push({
-        id: `mpesa-${tx.receiptNo || tx.completionTime || Math.random()}`,
+        id: `mpesa-${receiptNo || tx.completionTime || Math.random()}`,
         provider: "M-Pesa",
         providerKey: "mpesa",
-        date: tx.completionTime || "—",
-        ref: tx.receiptNo || "—",
-        details: tx.details || "Transaction",
+        date: tx.completionTime || tx.date || "—",
+        ref: receiptNo || "—",
+        details: tx.details || tx.transactionNarrative || "Transaction",
         type: isPaidIn ? "inflow" : isPaidOut ? "outflow" : "other",
-        amount: isPaidIn ? tx.paidIn : tx.paidOut || tx.amount || "0.00",
+        amount: isPaidIn ? paidIn : paidOut || tx.amount || "0.00",
         balance: tx.balance || "—",
       });
     });
 
     // Airtel
     (wallets.airtel?.transactions || []).forEach((tx) => {
-      const isCredit = Boolean(tx.credit && normalizeMoney(tx.credit) > 0);
+      const credit = tx.credit ?? tx.paidIn ?? tx.amountCredit;
+      const debit = tx.debit ?? tx.withdrawn ?? tx.paidOut ?? tx.amountDebit;
+      const isCredit = Boolean(normalizeMoney(credit) > 0);
+      const receiptNo = tx.id || tx.ref || tx.receiptNo;
+      const key = receiptNo && receiptNo !== "—" && receiptNo.trim() !== "" 
+        ? `airtel:${receiptNo}` 
+        : `airtel:${tx.date || tx.transactionDate || tx.completionTime}:${credit}:${debit}:${tx.description || tx.details}`;
+      if (seen.has(key)) return;
+      seen.add(key);
       list.push({
-        id: `airtel-${tx.id || tx.date || Math.random()}`,
+        id: `airtel-${receiptNo || tx.date || Math.random()}`,
         provider: "Airtel Money",
         providerKey: "airtel",
-        date: tx.date || "—",
-        ref: tx.id || tx.ref || "—",
-        details: tx.description || "Airtel Transaction",
+        date: tx.date || tx.transactionDate || tx.completionTime || "—",
+        ref: receiptNo || "—",
+        details: tx.description || tx.details || tx.transactionNarrative || "Airtel Transaction",
         type: isCredit ? "inflow" : "outflow",
-        amount: isCredit ? tx.credit : tx.debit || tx.amount || "0.00",
+        amount: isCredit ? credit : debit || tx.amount || "0.00",
         balance: tx.balance || "—",
       });
     });
 
     // I&M Bank
     (wallets.im?.transactions || []).forEach((tx) => {
-      const isCredit = Boolean(tx.credit && normalizeMoney(tx.credit) > 0);
+      const credit = tx.credit ?? tx.deposits ?? tx.paidIn;
+      const debit = tx.debit ?? tx.withdrawals ?? tx.withdrawn ?? tx.paidOut;
+      const isCredit = Boolean(normalizeMoney(credit) > 0);
+      const receiptNo = tx.refNo || tx.ref;
+      const key = receiptNo && receiptNo !== "—" && receiptNo.trim() !== "" 
+        ? `im:${receiptNo}` 
+        : `im:${tx.tranDate || tx.postDate || tx.valueDate}:${credit}:${debit}:${tx.narrative || tx.transactionNarrative}`;
+      if (seen.has(key)) return;
+      seen.add(key);
       list.push({
-        id: `im-${tx.ref || tx.postDate || Math.random()}`,
+        id: `im-${receiptNo || tx.tranDate || Math.random()}`,
         provider: "I&M Bank",
         providerKey: "im",
-        date: tx.postDate || tx.valueDate || "—",
-        ref: tx.ref || "—",
-        details: tx.narrative || tx.description || "Bank Entry",
+        date: tx.postDate || tx.valueDate || tx.tranDate || tx.transactionDate || "—",
+        ref: receiptNo || "—",
+        details: tx.narrative || tx.transactionNarrative || tx.description || tx.details || "Bank Entry",
         type: isCredit ? "inflow" : "outflow",
-        amount: isCredit ? tx.credit : tx.debit || tx.amount || "0.00",
+        amount: isCredit ? credit : debit || tx.amount || "0.00",
         balance: tx.runningBalance || tx.balance || "—",
       });
     });
@@ -70,9 +95,9 @@ const TransactionsView = () => {
   const filtered = useMemo(() => {
     return allTransactions.filter((tx) => {
       const matchesSearch =
-        tx.details.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tx.ref.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tx.provider.toLowerCase().includes(searchTerm.toLowerCase());
+        (tx.details || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (tx.ref || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (tx.provider || "").toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesType =
         filterType === "all" ||
@@ -162,9 +187,9 @@ const TransactionsView = () => {
         </div>
       </div>
 
-      <div className="card-table-wrap">
+      <div className="card-table-wrap transactions-ledger-wrap">
         {filtered.length > 0 ? (
-          <table className="ledger-table">
+          <table className="ledger-table transactions-ledger-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -177,16 +202,16 @@ const TransactionsView = () => {
             <tbody>
               {filtered.map((tx) => (
                 <tr key={tx.id}>
-                  <td className="text-muted">{tx.date}</td>
-                  <td>
+                  <td className="text-muted ledger-date-cell" data-label="Date">{tx.date}</td>
+                  <td className="ledger-source-cell" data-label="Source">
                     <span className={`source-tag tag-${tx.providerKey}`}>
                       {tx.provider}
                     </span>
                   </td>
-                  <td className="tx-details-cell">{tx.details}</td>
-                  <td className="mono-cell">{tx.ref}</td>
-                  <td className={`text-right ${tx.type === "inflow" ? "amt-inflow" : "amt-outflow"}`}>
-                    {tx.type === "inflow" ? "+" : "-"}Ksh {formatMoney(tx.amount)}
+                  <td className="tx-details-cell ledger-description-cell" data-label="Description">{tx.details}</td>
+                  <td className="mono-cell ledger-reference-cell" data-label="Reference">{tx.ref}</td>
+                  <td className={`text-right ledger-amount-cell ${tx.type === "inflow" ? "amt-inflow" : tx.type === "outflow" ? "amt-outflow" : ""}`} data-label="Amount">
+                    {tx.type === "inflow" ? "+" : tx.type === "outflow" ? "-" : ""}Ksh {formatMoney(tx.amount)}
                   </td>
                 </tr>
               ))}

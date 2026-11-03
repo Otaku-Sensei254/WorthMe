@@ -7,7 +7,6 @@ defmodule WorthMeWeb.Router do
     plug :accepts, ["json"]
     plug :fetch_session           # Required to read the cookie
     plug :fetch_current_user      #tries to get user logged in from session
-
   end
 
   pipeline :browser do
@@ -25,6 +24,9 @@ defmodule WorthMeWeb.Router do
     get "/me", UserController, :show
     post "/statements", StatementController, :create
     get "/statements/latest", StatementController, :latest
+    get "/balance-snapshots", BalanceSnapshotController, :index
+    post "/balance-snapshots", BalanceSnapshotController, :create
+    get "/market-watch", MarketDataController, :index
 
     post "/users/register", UserRegistrationController, :create
     post "/users/log_in", UserSessionController, :create

@@ -127,28 +127,54 @@ const extractMetadata = (rows) => {
         const summaryAmount = amountAt(items, 390, 455);
 
         if (/^Balance as of\b/i.test(text)) {
-            summary.balanceAsOf = summaryAmount;
-            summary.balanceAsOfDate = summaryDate;
+            if (summaryAmount !== '0.00') {
+                summary.balanceAsOf = summaryAmount;
+            } else {
+                // Fallback: look for any amount on this row
+                const anyAmount = items.find(({ text }) => IS_AMOUNT(text));
+                if (anyAmount) summary.balanceAsOf = cleanAmount(anyAmount.text);
+            }
+            summary.balanceAsOfDate = summaryDate || (text.match(/\d{2}-\d{2}-\d{4}/)?.[0] || '');
         }
 
         if (/^Cleared Balance as on\b/i.test(text)) {
-            summary.clearedBalance = summaryAmount;
-            summary.clearedBalanceDate = summaryDate;
+            if (summaryAmount !== '0.00') {
+                summary.clearedBalance = summaryAmount;
+            } else {
+                const anyAmount = items.find(({ text }) => IS_AMOUNT(text));
+                if (anyAmount) summary.clearedBalance = cleanAmount(anyAmount.text);
+            }
+            summary.clearedBalanceDate = summaryDate || (text.match(/\d{2}-\d{2}-\d{4}/)?.[0] || '');
         }
 
         if (/^Unclear Balance as on\b/i.test(text)) {
-            summary.unclearBalance = summaryAmount;
-            summary.unclearBalanceDate = summaryDate;
+            if (summaryAmount !== '0.00') {
+                summary.unclearBalance = summaryAmount;
+            } else {
+                const anyAmount = items.find(({ text }) => IS_AMOUNT(text));
+                if (anyAmount) summary.unclearBalance = cleanAmount(anyAmount.text);
+            }
+            summary.unclearBalanceDate = summaryDate || (text.match(/\d{2}-\d{2}-\d{4}/)?.[0] || '');
         }
 
         if (/^Lien Amount as on\b/i.test(text)) {
-            summary.lienAmount = summaryAmount;
-            summary.lienAmountDate = summaryDate;
+            if (summaryAmount !== '0.00') {
+                summary.lienAmount = summaryAmount;
+            } else {
+                const anyAmount = items.find(({ text }) => IS_AMOUNT(text));
+                if (anyAmount) summary.lienAmount = cleanAmount(anyAmount.text);
+            }
+            summary.lienAmountDate = summaryDate || (text.match(/\d{2}-\d{2}-\d{4}/)?.[0] || '');
         }
 
         if (/^Effective Avail Bal as of\b/i.test(text)) {
-            summary.effectiveAvailableBalance = summaryAmount;
-            summary.effectiveAvailableBalanceDate = summaryDate;
+            if (summaryAmount !== '0.00') {
+                summary.effectiveAvailableBalance = summaryAmount;
+            } else {
+                const anyAmount = items.find(({ text }) => IS_AMOUNT(text));
+                if (anyAmount) summary.effectiveAvailableBalance = cleanAmount(anyAmount.text);
+            }
+            summary.effectiveAvailableBalanceDate = summaryDate || (text.match(/\d{2}-\d{2}-\d{4}/)?.[0] || '');
         }
     });
 

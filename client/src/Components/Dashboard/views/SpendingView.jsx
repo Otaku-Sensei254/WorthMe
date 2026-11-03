@@ -2,10 +2,11 @@ import React, { useContext } from "react";
 import { WealthContext } from "../../../context/wealthContext";
 import { formatMoney } from "../../../utils/money";
 import { CreditCard, TrendingDown } from "lucide-react";
+import { MonthlyCashFlowChart, ProviderSpendChart } from "../FinancialCharts";
 import "../../styles/dashboard.css";
 
 const SpendingView = () => {
-  const { spendingInsights } = useContext(WealthContext);
+  const { spendingInsights, wealthState } = useContext(WealthContext);
 
   const totalSpent = spendingInsights?.totalSpent || "0.00";
   const totalReceived = spendingInsights?.totalReceived || "0.00";
@@ -38,6 +39,11 @@ const SpendingView = () => {
           </strong>
           <small>Based on aggregate statement volume</small>
         </div>
+      </div>
+
+      <div className="financial-charts-grid">
+        <MonthlyCashFlowChart wealthState={wealthState} />
+        <ProviderSpendChart byProvider={byProvider} />
       </div>
 
       <div className="two-column-grid">

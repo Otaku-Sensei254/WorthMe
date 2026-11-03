@@ -1,27 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/dashboard.css";
 
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const MarketWatchView = () => {
-  const stocks = [
-    { ticker: "SCOM", name: "Safaricom PLC", price: "17.40", change: "+1.75%", isPositive: true },
-    { ticker: "EQTY", name: "Equity Group Holdings", price: "43.50", change: "+0.80%", isPositive: true },
-    { ticker: "KCB", name: "KCB Group PLC", price: "34.15", change: "-0.45%", isPositive: false },
-    { ticker: "EABL", name: "East African Breweries", price: "162.00", change: "+2.20%", isPositive: true },
-    { ticker: "COOP", name: "Co-operative Bank", price: "13.25", change: "+0.00%", isPositive: true },
-    { ticker: "NCBA", name: "NCBA Group PLC", price: "41.00", change: "+1.10%", isPositive: true },
-  ];
+  const [data, setData] = useState({ stocks: [], fxRates: [], yields: [], lastUpdated: null });
+  const [loading, setLoading] = useState(true);
 
-  const fxRates = [
-    { pair: "USD / KES", rate: "128.50", change: "-0.15%", isPositive: true },
-    { pair: "GBP / KES", rate: "166.20", change: "+0.30%", isPositive: false },
-    { pair: "EUR / KES", rate: "139.80", change: "+0.10%", isPositive: false },
-  ];
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/market-watch`, {
+          headers: { Accept: "application/json" },
+          credentials: "include",
+        });
+        const json = await res.json();
+        setData(json);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
-  const yields = [
-    { term: "91-Day Treasury Bill", rate: "15.75%" },
-    { term: "182-Day Treasury Bill", rate: "16.45%" },
-    { term: "364-Day Treasury Bill", rate: "16.85%" },
-  ];
+  const stocks = data.stocks || [];
+  const fxRates = data.fxRates || [];
+  const yields = data.yields || [];
 
   return (
     <div className="view-container">

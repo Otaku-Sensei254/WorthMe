@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { WealthContext } from "../../context/wealthContext";
 import "../styles/dashboard.css";
 import { formatMoney } from "../../utils/money";
+import { BalanceCompositionChart } from "./FinancialCharts";
 
 const AssetsView = () => {
   const { trackedWallets, totalWorth } = useContext(WealthContext);
@@ -16,6 +17,7 @@ const AssetsView = () => {
         <span>Tracked Worth</span>
         <strong>Ksh {formatMoney(totalWorth)}</strong>
       </div>
+      <BalanceCompositionChart wallets={trackedWallets} totalWorth={totalWorth} />
       <div className="assets-container">
         {trackedWallets.map((asset) => (
           <div className="asset-card" key={asset.key} style={{ borderTop: `4px solid ${asset.accent}` }}>

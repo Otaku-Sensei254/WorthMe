@@ -4,7 +4,6 @@ import { UserContext } from "./userContext";
 export const  WealthContext = createContext();
 
 const STORAGE_PREFIX = "worthme-wealth";
-const LAST_KEY_STORAGE = `${STORAGE_PREFIX}:last_key`;
 
 const emptyWallet = {
   summary: null,
@@ -60,28 +59,24 @@ export const WealthProvider = ({ children }) => {
   const { user } = useContext(UserContext);
   const [storageKey, setStorageKey] = useState(() => getUserStorageKey(user));
   const [wealthState, setWealthState] = useState(() => makeDefaultState());
+  const [isWealthLoaded, setIsWealthLoaded] = useState(false);
+  const [balanceHistory, setBalanceHistory] = useState([]);
+  const [isBalanceHistoryLoading, setIsBalanceHistoryLoading] = useState(false);
+  const [snapshotDate, setSnapshotDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   useEffect(() => {
     const nextKey = getUserStorageKey(user);
+    setIsWealthLoaded(false);
     setStorageKey(nextKey);
     const cached = localStorage.getItem(nextKey);
     if (cached) {
       setWealthState(hydrateState(safeParse(cached, makeDefaultState())));
-      localStorage.setItem(LAST_KEY_STORAGE, nextKey);
+      setIsWealthLoaded(true);
       return;
     }
 
-    // Fallback to the last known key (useful when the session check is flaky).
-    const lastKey = localStorage.getItem(LAST_KEY_STORAGE);
-    if (lastKey) {
-      const lastCached = localStorage.getItem(lastKey);
-      if (lastCached) {
-        setWealthState(hydrateState(safeParse(lastCached, makeDefaultState())));
-        return;
-      }
-    }
-
     setWealthState(makeDefaultState());
+    setIsWealthLoaded(true);
   }, [user]);
 
   // Rehydrate from DB on app start (covers dashboard refresh).
@@ -183,9 +178,90 @@ export const WealthProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
+    if (!isWealthLoaded) return;
     localStorage.setItem(storageKey, JSON.stringify(wealthState));
-    localStorage.setItem(LAST_KEY_STORAGE, storageKey);
-  }, [storageKey, wealthState]);
+  }, [isWealthLoaded, storageKey, wealthState]);
+
+  const snapshotBalances = useMemo(() => {
+    return TRACKED_PROVIDER_KEYS.reduce((balances, provider) => {
+      const wallet = wealthState.wallets?.[provider];
+      const hasCapturedBalance = Boolean(
+        wallet?.updatedAt || wallet?.transactions?.length || wallet?.summary
+      );
+
+      if (hasCapturedBalance) balances[provider] = formatAmount(wallet.worth);
+      return balances;
+    }, {});
+  }, [wealthState]);
+
+  const snapshotSignature = useMemo(
+    () => `${snapshotDate}:${JSON.stringify(snapshotBalances)}`,
+    [snapshotBalances, snapshotDate]
+  );
+
+  useEffect(() => {
+    const updateSnapshotDate = () => setSnapshotDate(new Date().toISOString().slice(0, 10));
+    const interval = window.setInterval(updateSnapshotDate, 15 * 60 * 1000);
+    window.addEventListener("focus", updateSnapshotDate);
+    document.addEventListener("visibilitychange", updateSnapshotDate);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", updateSnapshotDate);
+      document.removeEventListener("visibilitychange", updateSnapshotDate);
+    };
+  }, []);
+
+  const fetchBalanceHistory = async () => {
+    if (!user) return;
+    setIsBalanceHistoryLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:4000/api/balance-snapshots?days=180", {
+        headers: { Accept: "application/json" },
+        credentials: "include",
+      });
+      if (!response.ok) return;
+
+      const data = await response.json();
+      if (data.success && Array.isArray(data.snapshots)) setBalanceHistory(data.snapshots);
+    } catch {
+      // Keep the dashboard usable when the API is unavailable.
+    } finally {
+      setIsBalanceHistoryLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      setBalanceHistory([]);
+      return;
+    }
+    fetchBalanceHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  useEffect(() => {
+    if (!user || !isWealthLoaded || !Object.keys(snapshotBalances).length) return;
+
+    const persistSnapshots = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/balance-snapshots", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ balances: snapshotBalances }),
+        });
+
+        if (response.ok) await fetchBalanceHistory();
+      } catch {
+        // Balance history is an enhancement; current wallet balances remain available.
+      }
+    };
+
+    persistSnapshots();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isWealthLoaded, snapshotSignature]);
 
   const saveWalletSnapshot = (provider, snapshot) => {
     const key = String(provider || "").toLowerCase();
@@ -366,6 +442,8 @@ export const WealthProvider = ({ children }) => {
         totalTrackedTransactions,
         spendingInsights,
         recentTransactions,
+        balanceHistory,
+        isBalanceHistoryLoading,
       }}
     >
       {children}

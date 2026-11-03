@@ -79,13 +79,24 @@ const Mpesa = () => {
             if (result.success) {
                 setTransactions(result.transactions);
                 setSummary(result.summary || null);
+                const uniqueTxns = (result.transactions || []).reduce((acc, tx) => {
+                    const receipt = tx.receiptNo || tx.ref || tx.id;
+                    const key = receipt && receipt.trim() && receipt !== ''
+                        ? receipt.trim()
+                        : `${tx.completionTime || tx.date}|${tx.details || tx.transactionNarrative}|${tx.paidIn}|${tx.withdrawn}`;
+                    if (!acc.seen.has(key)) {
+                        acc.seen.add(key);
+                        acc.items.push(tx);
+                    }
+                    return acc;
+                }, { seen: new Set(), items: [] }).items;
                 saveWalletSnapshot('mpesa', {
                     provider: 'M-Pesa',
                     label: 'M-Pesa Wallet',
                     worth: result.summary?.currentBalance || '0.00',
                     balance: result.summary?.currentBalance || '0.00',
                     summary: result.summary || null,
-                    transactions: result.transactions || [],
+                    transactions: uniqueTxns,
                     customerName: result.summary?.customerName || result.debugCustomerName || '',
                     mobileNumber: result.summary?.mobileNumber || '',
                     statementPeriod: result.summary?.statementPeriod || '',

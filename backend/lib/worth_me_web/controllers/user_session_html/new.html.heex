@@ -1,0 +1,11 @@
+Log in
+<a href="/users/register">Register</a>
+Forgot your password?
+<%= if assigns[:error_message] do %><%= @error_message %><% end %>
+<%= if Phoenix.Controller.get_flash(@conn, :error) do %><%= Phoenix.Controller.get_flash(@conn, :error) %><% end %>
+<form action="/users/log_in" method="post">
+  <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
+  <input type="email" name="user[email]" />
+  <input type="password" name="user[password]" />
+  <button>Log in</button>
+</form>

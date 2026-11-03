@@ -144,13 +144,25 @@ const BankConnect = () => {
                         const nextSummary = result.summary || {};
                         const worth = nextSummary.balanceAsOf || nextSummary.effectiveAvailableBalance || nextSummary.openingBalance || '0.00';
 
+                        const uniqueTxns = (result.transactions || []).reduce((acc, tx) => {
+                            const receipt = tx.refNo || tx.ref;
+                            const key = receipt && receipt.trim() && receipt !== ''
+                                ? receipt.trim()
+                                : `${tx.tranDate || tx.postDate}|${tx.narrative || tx.transactionNarrative}|${tx.credit}|${tx.debit}`;
+                            if (!acc.seen.has(key)) {
+                                acc.seen.add(key);
+                                acc.items.push(tx);
+                            }
+                            return acc;
+                        }, { seen: new Set(), items: [] }).items;
+
                         saveWalletSnapshot('im', {
                             provider: 'I&M Bank',
                             label: 'I&M Bank Account',
                             worth,
                             balance: worth,
                             summary: nextSummary,
-                            transactions: result.transactions || [],
+                            transactions: uniqueTxns,
                             customerName: nextSummary.accountName || '',
                             accountNumber: nextSummary.accountNumber || '',
                             accountType: nextSummary.accountType || '',

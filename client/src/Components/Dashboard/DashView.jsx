@@ -6,10 +6,20 @@ import "../styles/dashboard.css";
 import { Link } from "react-router-dom";
 import { RefreshCw, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { formatMoney } from "../../utils/money";
+import { BalanceHistoryChart, MonthlyCashFlowChart } from "./FinancialCharts";
 
 const DashboardView = () => {
   const { user } = useContext(UserContext);
-  const { trackedWallets, totalWorth, totalTrackedTransactions, spendingInsights, saveWalletSnapshot } = useContext(WealthContext);
+  const {
+    wealthState,
+    trackedWallets,
+    totalWorth,
+    totalTrackedTransactions,
+    spendingInsights,
+    saveWalletSnapshot,
+    balanceHistory,
+    isBalanceHistoryLoading,
+  } = useContext(WealthContext);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState(null); // 'requesting', 'polling', 'success', 'error'
   const [error, setError] = useState(null);
@@ -129,6 +139,8 @@ const DashboardView = () => {
     <div className="dashboard-view">
       <div className="dashboard-hero">
         <div className="dashboard-hero-content">
+        <div className="dashboard-hero-content-left"></div>
+        <div className="dashboard-hero-content-right"></div>
           <p className="dashboard-eyebrow">Portfolio Overview</p>
           <h2>Welcome back, <em>{firstName}</em></h2>
           <p className="dashboard-copy">
@@ -175,6 +187,11 @@ const DashboardView = () => {
             subtitle={card.subtitle}
           />
         ))}
+      </div>
+
+      <div className="financial-charts-grid">
+        <BalanceHistoryChart snapshots={balanceHistory} isLoading={isBalanceHistoryLoading} />
+        <MonthlyCashFlowChart wealthState={wealthState} />
       </div>
 
       <div className="spending-overview">

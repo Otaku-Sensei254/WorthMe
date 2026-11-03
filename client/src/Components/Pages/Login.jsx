@@ -6,6 +6,8 @@ import { UserContext } from "../../context/userContext";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import AuthLayout from "../Auth/AuthLayout";
 
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const Login = () => {
   const navigate = useNavigate();
   // Destructure setUser so we can update the global app state
@@ -24,7 +26,7 @@ const Login = () => {
   useEffect(() => {
     const fetchNeonConfig = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/auth/neon/config", {
+        const res = await fetch(`${API_BASE}/api/auth/neon/config`, {
           headers: { "Accept": "application/json" },
         });
         const data = await res.json();
@@ -63,7 +65,7 @@ const Login = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:4000/api/users/log_in", {
+      const res = await fetch(`${API_BASE}/api/users/log_in`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
