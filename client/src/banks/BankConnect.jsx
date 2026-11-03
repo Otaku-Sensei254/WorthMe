@@ -1,10 +1,10 @@
-const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Upload, FileText, Search, AlertCircle, Loader2, ShieldCheck, Link2, Database, CheckCircle2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo, User, CreditCard, CalendarDays } from 'lucide-react';
 import '../Components/styles/BankConnect.css';
 import { WealthContext } from '../context/wealthContext';
 import { formatMoney } from '../utils/money';
+const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 
 // Minimal bank details, no more hardcoded columns
 const bankDetails = {

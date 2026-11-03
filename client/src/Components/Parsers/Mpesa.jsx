@@ -1,10 +1,10 @@
-const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet } from 'lucide-react';
 import '../styles/Mpesa.css';
 import '../styles/ParserPages.css';
 import { WealthContext } from '../../context/wealthContext';
 import { formatMoney } from '../../utils/money';
+const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 
 const Mpesa = () => {
     const [file, setFile] = useState(null);
