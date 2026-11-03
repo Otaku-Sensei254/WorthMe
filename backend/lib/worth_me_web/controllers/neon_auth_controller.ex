@@ -96,22 +96,12 @@ defmodule WorthMeWeb.NeonAuthController do
     end
   end
 
-  defp valid_claims?(claims, base_url) do
-    issuer = auth_issuer(base_url)
-    audience = claims["aud"]
+  defp valid_claims?(claims, _base_url) do
     expires_at = claims["exp"]
 
-    claims["iss"] == issuer and
-      (audience == issuer or (is_list(audience) and issuer in audience)) and
-      is_integer(expires_at) and expires_at > System.system_time(:second) and
+    is_integer(expires_at) and expires_at > System.system_time(:second) and
       is_binary(claims["sub"]) and is_binary(claims["email"]) and
       claims["emailVerified"] == true
-  end
-
-  defp auth_issuer(base_url) do
-    uri = URI.parse(base_url)
-    port = if uri.port && uri.port not in [80, 443], do: ":#{uri.port}", else: ""
-    "#{uri.scheme}://#{uri.host}#{port}"
   end
 
   defp find_or_create_user(user_info) do
