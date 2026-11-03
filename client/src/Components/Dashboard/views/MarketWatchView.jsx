@@ -5,7 +5,6 @@ const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const MarketWatchView = () => {
   const [data, setData] = useState({ stocks: [], fxRates: [], yields: [], lastUpdated: null });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
@@ -18,8 +17,6 @@ const MarketWatchView = () => {
         setData(json);
       } catch (e) {
         console.error(e);
-      } finally {
-        setLoading(false);
       }
     };
     load();
