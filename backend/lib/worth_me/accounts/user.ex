@@ -10,8 +10,8 @@ defmodule WorthMe.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :naive_datetime
     field :first_name, :string
-  field :last_name, :string
-  field :phone, :string
+    field :last_name, :string
+    field :phone, :string
 
     timestamps()
   end
@@ -45,7 +45,17 @@ defmodule WorthMe.Accounts.User do
     |> validate_email(opts)
     |> validate_password(opts)
     |> validate_required([:first_name, :last_name, :phone])
-    |> validate_format(:phone, ~r/^(\+?254)?[0-9]{9}$/, message: "should be 9 digits (optionally prefixed with +254)")
+    |> validate_format(:phone, ~r/^(\+?254)?[0-9]{9}$/,
+      message: "should be 9 digits (optionally prefixed with +254)"
+    )
+  end
+
+  def oauth_registration_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:email, :password, :first_name, :last_name, :phone])
+    |> validate_email([])
+    |> validate_password([])
+    |> validate_required([:first_name, :last_name])
   end
 
   defp validate_email(changeset, opts) do
@@ -60,6 +70,7 @@ defmodule WorthMe.Accounts.User do
     changeset
     |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
+    |> validate_length(:password, max: 72, count: :bytes)
     # Examples of additional password validation:
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
@@ -73,8 +84,6 @@ defmodule WorthMe.Accounts.User do
 
     if hash_password? && password && changeset.valid? do
       changeset
-      # If using Bcrypt, then further validate it is at most 72 bytes long
-      |> validate_length(:password, max: 72, count: :bytes)
       # Hashing could be done with `Ecto.Changeset.prepare_changes/2`, but that
       # would keep the database transaction open longer and hurt performance.
       |> put_change(:hashed_password, Bcrypt.hash_pwd_salt(password))

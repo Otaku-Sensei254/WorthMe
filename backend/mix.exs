@@ -50,7 +50,8 @@ defmodule WorthMe.MixProject do
       {:phoenix_live_view, "~> 1.0"},
       {:cors_plug, "~> 3.0"},
       {:tesla, "~> 1.4"},
-      {:hackney, "~> 1.17"}
+      {:hackney, "~> 1.17"},
+      {:jose, "~> 1.11"}
     ]
   end
 

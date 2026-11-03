@@ -1,15 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import "../styles/auth.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { UserContext } from "../../context/userContext";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import AuthLayout from "../Auth/AuthLayout";
+import { getNeonAuthUrl, startGoogleSignIn } from "../../auth/neonAuth";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   // Destructure setUser so we can update the global app state
   const { setUser } = useContext(UserContext);
   
@@ -20,30 +22,35 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [neonAuthEnabled, setNeonAuthEnabled] = useState(false);
-  const [neonAuthUrl, setNeonAuthUrl] = useState(null);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const fetchNeonConfig = async () => {
+    const checkNeonConfig = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/auth/neon/config`, {
-          headers: { "Accept": "application/json" },
-        });
-        const data = await res.json();
-        if (data.enabled && data.base_url) {
-          setNeonAuthEnabled(true);
-          setNeonAuthUrl(data.base_url);
-        }
+        await getNeonAuthUrl();
+        setNeonAuthEnabled(true);
       } catch {
-        // ignore - offline mode
+        setNeonAuthEnabled(false);
       }
     };
-    fetchNeonConfig();
+    checkNeonConfig();
   }, []);
 
-  const handleGoogleSignIn = () => {
-    if (neonAuthUrl) {
-      window.location.href = `${neonAuthUrl}/sign-in/google`;
+  useEffect(() => {
+    if (searchParams.get("auth_error") === "google") {
+      setError("Google sign-in could not be completed. Please try again.");
+    }
+  }, [searchParams]);
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleSubmitting(true);
+    setError(null);
+    try {
+      await startGoogleSignIn();
+    } catch (signInError) {
+      setError(signInError.message || "Google sign-in is unavailable right now.");
+      setIsGoogleSubmitting(false);
     }
   };
 
@@ -118,7 +125,9 @@ const Login = () => {
       {error && <div className="error-banner" role="alert">{error}</div>}
 
       <div className="auth-social">
-        <GoogleAuthButton enabled={neonAuthEnabled} onClick={handleGoogleSignIn} />
+        <GoogleAuthButton enabled={neonAuthEnabled && !isGoogleSubmitting} onClick={handleGoogleSignIn}>
+          {isGoogleSubmitting ? "Connecting to Google…" : "Continue with Google"}
+        </GoogleAuthButton>
         <div className="auth-divider"><span>or continue with email</span></div>
       </div>
 

@@ -68,14 +68,15 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 else
   if secret_key_base do
-    config :worth_me, WorthMeWeb.Endpoint,
-      secret_key_base: secret_key_base
+    config :worth_me, WorthMeWeb.Endpoint, secret_key_base: secret_key_base
   end
 end
 
 # Neon Auth
 config :worth_me, :neon_auth,
-  base_url: System.get_env("NEON_AUTH_BASE_URL")
+  base_url:
+    System.get_env("NEON_AUTH_BASE_URL") ||
+      "https://ep-fancy-smoke-b51bqfgm.neonauth.c-7.us-east-2.aws.neon.tech/neondb/auth"
 
 # ## Configuring the mailer
 #

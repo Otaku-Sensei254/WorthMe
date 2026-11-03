@@ -24,6 +24,13 @@ const DashboardView = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState(null); // 'requesting', 'polling', 'success', 'error'
   const [error, setError] = useState(null);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+
+  const uploadOptions = [
+    { label: "M-Pesa", to: "/mpesa" },
+    { label: "Airtel Money", to: "/airtel" },
+    { label: "I&M Bank", to: "/banks/connect/im" },
+  ];
 
   const firstName = user?.first_name ||  "there";
   const mpesa = trackedWallets.find((wallet) => wallet.key === "mpesa");
@@ -172,8 +179,13 @@ const DashboardView = () => {
           </div>
         </div>
         <div className="dashboard-hero-actions">
-          <Link to="/mpesa" className="dashboard-hero-link">Upload Statement</Link>
-          <Link to="/banks/connect/im" className="dashboard-hero-link secondary">Upload I&M</Link>
+          <button
+            type="button"
+            className="dashboard-hero-link"
+            onClick={() => setIsUploadOpen(true)}
+          >
+            Upload Statement
+          </button>
           <Link to="/profile" className="dashboard-hero-link secondary">Profile</Link>
         </div>
       </div>
@@ -222,6 +234,44 @@ const DashboardView = () => {
           ))}
         </div>
       </div>
+
+      {isUploadOpen && (
+        <div
+          className="dashboard-modal-backdrop"
+          onClick={() => setIsUploadOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="dashboard-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="upload-statement-title"
+          >
+            <h2 id="upload-statement-title">Upload Statement</h2>
+            <p>Choose the statement type you want to upload.</p>
+            <div className="dashboard-upload-options">
+              {uploadOptions.map((option) => (
+                <Link
+                  key={option.to}
+                  to={option.to}
+                  className="dashboard-hero-link secondary"
+                  onClick={() => setIsUploadOpen(false)}
+                >
+                  {option.label}
+                </Link>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="dashboard-hero-link"
+              onClick={() => setIsUploadOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -16,7 +16,7 @@ const GoogleAuthButton = ({ enabled, onClick, children = "Continue with Google" 
     </svg>
     <span className="google-auth-copy">
       <span>{children}</span>
-      {!enabled && <small id="google-auth-status">Coming soon</small>}
+      {!enabled && <small id="google-auth-status">Unavailable</small>}
     </span>
   </button>
 );

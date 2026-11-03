@@ -13,6 +13,7 @@ import Footer from "./Components/Footer/Footer";
 import InitialPageLoader from "./Components/InitialPageLoader";
 import BankConnect from "./banks/BankConnect";
 import Profile from "./Components/Pages/Profile";
+import NeonAuthCallback from "./Components/Pages/NeonAuthCallback";
 // Context & Protection
 import { UserProvider } from "./context/userContext";
 import { WealthProvider } from "./context/wealthContext";
@@ -27,7 +28,7 @@ import Banks from "./banks/Banks";
 const Layout = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/dashboard");
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/auth/neon/callback";
 
   return (
     <div className={isDashboard ? "dashboard-shell-layout" : "public-shell-layout"}>
@@ -116,6 +117,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "auth/neon/callback",
+        element: <NeonAuthCallback />,
       },
     ],
   },

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Sidebar from "../Dashboard/SideBar";
 import MiddleContent from "../Dashboard/MiddleContent";
 import RightPanel from "../RightPanel/RightPanel";
@@ -6,7 +7,10 @@ import Footer from "../Footer/Footer";
 import "../styles/dashboard.css";
 
 const DashboardPage = () => {
-  const [activeSection, setActiveSection] = useState("home");
+  const [searchParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState(
+    searchParams.get("section") === "recurring" ? "recurring" : "home"
+  );
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem("worthme_sidebar_collapsed") === "true";
   });

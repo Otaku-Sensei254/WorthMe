@@ -20,7 +20,13 @@ defmodule WorthMeWeb.UserRegistrationController do
             |> put_status(:created)
             |> json(%{
               message: "User created successfully",
-              user: %{id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name}
+              user: %{
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                phone: user.phone
+              }
             })
 
         _ ->
@@ -32,7 +38,7 @@ defmodule WorthMeWeb.UserRegistrationController do
             |> put_status(:created)
             |> json(%{
               message: "User created successfully",
-              user: %{id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name}
+              user: %{id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name, phone: user.phone}
             })
           end
         end

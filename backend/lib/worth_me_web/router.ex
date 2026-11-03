@@ -26,6 +26,10 @@ defmodule WorthMeWeb.Router do
     get "/statements/latest", StatementController, :latest
     get "/balance-snapshots", BalanceSnapshotController, :index
     post "/balance-snapshots", BalanceSnapshotController, :create
+    get "/planning/:resource", PlanningController, :index
+    post "/planning/:resource", PlanningController, :create
+    put "/planning/:resource/:id", PlanningController, :update
+    delete "/planning/:resource/:id", PlanningController, :delete
     get "/market-watch", MarketDataController, :index
     get "/health", HealthController, :index
 

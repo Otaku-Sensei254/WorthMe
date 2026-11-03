@@ -9,10 +9,20 @@ defmodule WorthMeWeb.ErrorHelpers do
   Translates an error message using gettext.
   """
   def translate_error({msg, opts}) do
-    # When using gettext, we typically pass the gettext module.
-    # For this API, we'll just format the string.
     Enum.reduce(opts, msg, fn {key, value}, acc ->
-      String.replace(acc, "%{#{key}}", to_string(value))
+      placeholder = "%{#{key}}"
+
+      if String.contains?(acc, placeholder) do
+        String.replace(acc, placeholder, interpolate(value))
+      else
+        acc
+      end
     end)
   end
+
+  defp interpolate(value) when is_binary(value), do: value
+  defp interpolate(value) when is_atom(value), do: Atom.to_string(value)
+  defp interpolate(value) when is_number(value), do: to_string(value)
+  defp interpolate(value) when is_list(value), do: Enum.map_join(value, ", ", &interpolate/1)
+  defp interpolate(value), do: inspect(value)
 end

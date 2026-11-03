@@ -56,6 +56,11 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (["/login", "/register", "/auth/neon/callback"].includes(window.location.pathname)) {
+      setLoading(false);
+      return;
+    }
+
     fetchUser();
   }, []);
 

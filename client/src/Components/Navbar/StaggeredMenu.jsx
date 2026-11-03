@@ -55,8 +55,9 @@ export const StaggeredMenu = ({
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen, opacity: 1 });
       if (preContainer) {
-        gsap.set(preContainer, { xPercent: 0, opacity: 1 });
+        gsap.set(preContainer, { xPercent: 0, opacity: 1, visibility: 'hidden' });
       }
+      gsap.set(panel, { visibility: 'hidden' });
       gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
@@ -178,6 +179,10 @@ export const StaggeredMenu = ({
   const playOpen = useCallback(() => {
     if (busyRef.current) return;
     busyRef.current = true;
+    const panel = panelRef.current;
+    const preContainer = preLayersRef.current;
+    if (panel) gsap.set(panel, { visibility: 'visible', pointerEvents: 'auto' });
+    if (preContainer) gsap.set(preContainer, { visibility: 'visible' });
     const tl = buildOpenTimeline();
     if (tl) {
       tl.eventCallback('onComplete', () => {
@@ -219,6 +224,8 @@ export const StaggeredMenu = ({
         const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
         if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
         if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+        gsap.set(panel, { visibility: 'hidden', pointerEvents: 'none' });
+        if (preLayersRef.current) gsap.set(preLayersRef.current, { visibility: 'hidden' });
         busyRef.current = false;
       }
     });

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import AuthLayout from "../Auth/AuthLayout";
+import { getNeonAuthUrl, startGoogleSignIn } from "../../auth/neonAuth";
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const Register = () => {
@@ -19,30 +20,30 @@ const Register = () => {
   // NEW: State to store backend validation errors
   const [errors, setErrors] = useState({});
   const [neonAuthEnabled, setNeonAuthEnabled] = useState(false);
-  const [neonAuthUrl, setNeonAuthUrl] = useState(null);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
+  const [googleError, setGoogleError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const fetchNeonConfig = async () => {
+    const checkNeonConfig = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/auth/neon/config`, {
-          headers: { "Accept": "application/json" },
-        });
-        const data = await res.json();
-        if (data.enabled && data.base_url) {
-          setNeonAuthEnabled(true);
-          setNeonAuthUrl(data.base_url);
-        }
+        await getNeonAuthUrl();
+        setNeonAuthEnabled(true);
       } catch {
-        // ignore - offline mode
+        setNeonAuthEnabled(false);
       }
     };
-    fetchNeonConfig();
+    checkNeonConfig();
   }, []);
 
-  const handleGoogleSignIn = () => {
-    if (neonAuthUrl) {
-      window.location.href = `${neonAuthUrl}/sign-in/google`;
+  const handleGoogleSignIn = async () => {
+    setIsGoogleSubmitting(true);
+    setGoogleError("");
+    try {
+      await startGoogleSignIn();
+    } catch (error) {
+      setGoogleError(error.message || "Google sign-up is unavailable right now.");
+      setIsGoogleSubmitting(false);
     }
   };
 
@@ -79,25 +80,36 @@ const Register = () => {
         body: JSON.stringify(payload),
       });
 
-      const result = await res.json();
+      const responseBody = await res.text();
+      let result = null;
+      try {
+        result = responseBody ? JSON.parse(responseBody) : null;
+      } catch {
+        // Phoenix can return a plain-text debug exception for an unexpected 500.
+      }
 
       if (!res.ok) {
         // 3. Handle Ecto validation errors
         // Phoenix sends errors as: { "errors": { "email": ["has already been taken"] } }
-        if (result.errors) {
+        if (result?.errors) {
           setErrors(result.errors);
         } else {
-          alert(result.message || "Registration failed");
+          console.error(`Registration failed with HTTP ${res.status}.`);
+          alert(result?.message || `Registration failed (HTTP ${res.status}). Please try again.`);
         }
         return;
+      }
+
+      if (!result) {
+        throw new Error("The server returned an unreadable registration response.");
       }
 
       alert("Registration successful! Please log in.");
       navigate("/login");
 
     } catch (error) {
-      console.error("Connection Error:", error);
-      alert("Backend server is not running or CORS is blocking the request.");
+      console.error("Registration request failed:", error);
+      alert(error.message || "Could not reach the registration service. Please try again.");
     }
   };
 
@@ -117,9 +129,12 @@ const Register = () => {
       </div>
 
       <div className="auth-social">
-        <GoogleAuthButton enabled={neonAuthEnabled} onClick={handleGoogleSignIn}>Sign up with Google</GoogleAuthButton>
+        <GoogleAuthButton enabled={neonAuthEnabled && !isGoogleSubmitting} onClick={handleGoogleSignIn}>
+          {isGoogleSubmitting ? "Connecting to Google…" : "Sign up with Google"}
+        </GoogleAuthButton>
         <div className="auth-divider"><span>or register with email</span></div>
       </div>
+      {googleError && <div className="error-banner" role="alert">{googleError}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="inputs auth-fields auth-register-fields">
