@@ -47,12 +47,24 @@ export const startGoogleSignIn = async () => {
 
 export const completeGoogleSignIn = async () => {
   const authUrl = await getNeonAuthUrl();
-  const response = await fetch(`${authUrl}/get-session`, {
-    headers: { Accept: "application/json" },
-    credentials: "include",
-    cache: "no-store",
-  });
-  const result = await response.json().catch(() => null);
+
+  let response;
+  let result = null;
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    response = await fetch(`${authUrl}/get-session`, {
+      headers: { Accept: "application/json" },
+      credentials: "include",
+      cache: "no-store",
+    });
+    result = await response.json().catch(() => null);
+
+    if (response.ok && result?.session && result?.user) break;
+
+    if (attempt < 3) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+  }
 
   if (!response.ok) {
     throw new Error(`Neon Auth session check failed (${response.status}). Please try Google sign-in again.`);
@@ -60,7 +72,7 @@ export const completeGoogleSignIn = async () => {
 
   if (!result?.session || !result?.user) {
     throw new Error(
-      "Neon Auth did not find an active session. Please try again and allow cookies for the Neon Auth domain if your browser asks."
+      "Neon Auth did not find an active session. Please try again and allow third-party cookies for the Neon Auth domain if your browser asks."
     );
   }
 
