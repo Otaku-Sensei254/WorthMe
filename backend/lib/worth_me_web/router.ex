@@ -27,6 +27,7 @@ defmodule WorthMeWeb.Router do
     get "/balance-snapshots", BalanceSnapshotController, :index
     post "/balance-snapshots", BalanceSnapshotController, :create
     get "/market-watch", MarketDataController, :index
+    get "/health", HealthController, :index
 
     post "/users/register", UserRegistrationController, :create
     post "/users/log_in", UserSessionController, :create
