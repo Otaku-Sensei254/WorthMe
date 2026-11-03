@@ -1,3 +1,4 @@
+const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo } from 'lucide-react';
 import '../styles/Airtel.css';
@@ -67,7 +68,7 @@ const Airtel = () => {
         formData.append('statement', file);
 
         try {
-            const response = await fetch('http://localhost:5000/api/parse/airtel', {
+            const response = await fetch(`${PARSER_BASE}/api/parse/airtel`, {
                 method: 'POST',
                 body: formData,
             });

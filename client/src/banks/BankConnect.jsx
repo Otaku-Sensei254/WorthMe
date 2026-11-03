@@ -1,3 +1,4 @@
+const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Upload, FileText, Search, AlertCircle, Loader2, ShieldCheck, Link2, Database, CheckCircle2, Wallet, ArrowUpRight, ArrowDownRight, BadgeInfo, User, CreditCard, CalendarDays } from 'lucide-react';
@@ -131,7 +132,7 @@ const BankConnect = () => {
             formData.append('password', password);
 
             try {
-                const response = await fetch(`http://localhost:5000/api/parse/${bankId}`, {
+                const response = await fetch(`${PARSER_BASE}/api/parse/${bankId}`, {
                     method: 'POST',
                     body: formData,
                 });

@@ -1,3 +1,4 @@
+const PARSER_BASE = process.env.REACT_APP_PARSER_URL || "http://localhost:5000";
 import React, { useState, useMemo, useContext, useEffect } from 'react';
 import { Upload, FileText, Search, AlertCircle, Loader2, Wallet } from 'lucide-react';
 import '../styles/Mpesa.css';
@@ -70,7 +71,7 @@ const Mpesa = () => {
         formData.append('password', password);
 
         try {
-            const response = await fetch('http://localhost:5000/api/parse/mpesa', {
+            const response = await fetch(`${PARSER_BASE}/api/parse/mpesa`, {
                 method: 'POST',
                 body: formData,
             });
