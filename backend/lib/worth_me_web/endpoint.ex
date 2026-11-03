@@ -8,7 +8,8 @@ defmodule WorthMeWeb.Endpoint do
     store: :cookie,
     key: "_worth_me_key",
     signing_salt: "YcoaDOrr",
-    same_site: "Lax"
+    same_site: (if Mix.env() == :prod, do: "None", else: "Lax"),
+    secure: Mix.env() == :prod
   ]
 
   # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
