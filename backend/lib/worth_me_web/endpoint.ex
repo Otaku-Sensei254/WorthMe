@@ -19,7 +19,8 @@ defmodule WorthMeWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Session, @session_options
   plug CORSPlug,
-    origin: ["http://localhost:3000", "http://localhost:5173"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "https://worth-me.vercel.app"],
+
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     headers: ["Accept", "Authorization", "Content-Type"]
