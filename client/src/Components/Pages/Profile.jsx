@@ -1,13 +1,54 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../context/userContext";
 import { WealthContext } from "../../context/wealthContext";
 import { Link } from "react-router-dom";
 import "../styles/profile.css";
 import { formatMoney } from "../../utils/money";
+import { recurringMonthlyEquivalent, recurringScheduleLabel } from "../../utils/recurring";
+
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const Profile = () => {
   const { user } = useContext(UserContext);
   const { trackedWallets, totalWorth, totalTrackedTransactions, wealthState } = useContext(WealthContext);
+
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [recurringItems, setRecurringItems] = useState([]);
+  const [recurringLoading, setRecurringLoading] = useState(true);
+  const [recurringError, setRecurringError] = useState("");
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    const loadRecurringItems = async () => {
+      if (!user?.id) {
+        setRecurringItems([]);
+        setRecurringLoading(false);
+        return;
+      }
+
+      setRecurringLoading(true);
+      try {
+        const response = await fetch(`${API_BASE}/api/planning/recurring`, {
+          headers: { Accept: "application/json" },
+          credentials: "include",
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Could not load recurring items.");
+        if (isCurrent) {
+          setRecurringItems(data.items || []);
+          setRecurringError("");
+        }
+      } catch (error) {
+        if (isCurrent) setRecurringError(error.message || "Could not load recurring items.");
+      } finally {
+        if (isCurrent) setRecurringLoading(false);
+      }
+    };
+
+    loadRecurringItems();
+    return () => { isCurrent = false; };
+  }, [user?.id]);
 
   const displayName =
     [user?.first_name, user?.last_name].filter(Boolean).join(" ") ||
@@ -18,8 +59,18 @@ const Profile = () => {
   const profileFields = [
     { label: "Email", value: user?.email || "Not available yet" },
     { label: "Phone", value: user?.phone || "Not available yet" },
-    { label: "User ID", value: user?.id || "Session-based" },
     { label: "Tracked Worth", value: `Ksh ${formatMoney(totalWorth)}` },
+  ];
+
+  const totalRecurring = useMemo(
+    () => recurringItems.filter((item) => item.active).reduce((sum, item) => sum + recurringMonthlyEquivalent(item), 0),
+    [recurringItems]
+  );
+
+  const uploadOptions = [
+    { label: "M-Pesa", to: "/mpesa" },
+    { label: "Airtel Money", to: "/airtel" },
+    { label: "I&M Bank", to: "/banks/connect/im" },
   ];
 
   return (
@@ -34,9 +85,13 @@ const Profile = () => {
         </div>
         <div className="profile-hero-actions">
           <Link to="/dashboard" className="profile-action">Back to Dashboard</Link>
-          <Link to="/mpesa" className="profile-action secondary">Upload M-Pesa</Link>
-          <Link to="/airtel" className="profile-action secondary">Upload Airtel</Link>
-          <Link to="/banks/connect/im" className="profile-action secondary">Upload I&M</Link>
+          <button
+            type="button"
+            className="profile-action secondary"
+            onClick={() => setIsUploadOpen(true)}
+          >
+            Upload Statement
+          </button>
         </div>
       </section>
 
@@ -72,6 +127,46 @@ const Profile = () => {
         </div>
       </section>
 
+      <section className="profile-panel">
+        <div className="profile-recurring-heading">
+          <div>
+            <h2>Recurring expenses</h2>
+            <p>These are the same recurring items saved in your dashboard.</p>
+          </div>
+          <div className="profile-recurring-actions">
+            <span>{recurringItems.length} {recurringItems.length === 1 ? "ITEM" : "ITEMS"}</span>
+            <Link to="/dashboard?section=recurring" className="profile-action secondary">Manage</Link>
+          </div>
+        </div>
+        <div className="profile-recurring-total">
+          <span>Active monthly equivalent</span>
+          <strong>Ksh {formatMoney(totalRecurring)}</strong>
+        </div>
+
+        <div className="profile-recurring-list">
+          {recurringLoading ? (
+            <p className="profile-recurring-message">Loading your recurring items…</p>
+          ) : recurringError ? (
+            <p className="profile-recurring-message is-error" role="alert">{recurringError}</p>
+          ) : recurringItems.length === 0 ? (
+            <p className="profile-recurring-message">No recurring items yet. Add them from the dashboard’s Recurring section.</p>
+          ) : (
+            recurringItems.map((item) => (
+              <div key={item.id} className={`profile-recurring-item ${item.active ? "" : "is-paused"}`}>
+                <div className="profile-recurring-item-info">
+                  <strong>{item.name}</strong>
+                  <small>{item.category} · {recurringScheduleLabel(item)}{item.active ? "" : " · Paused"}</small>
+                </div>
+                <div className="profile-recurring-item-amount">
+                  <span>Ksh {formatMoney(item.amount)}</span>
+                  <small>per {item.frequency === "daily" ? "day" : item.frequency === "weekly" ? "week" : item.frequency === "yearly" ? "year" : "month"}</small>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
       <section className="profile-panel profile-wallets">
         <h2>Wallet Snapshots</h2>
         <div className="profile-wallet-grid">
@@ -87,6 +182,44 @@ const Profile = () => {
           ))}
         </div>
       </section>
+
+      {isUploadOpen && (
+        <div
+          className="profile-modal-backdrop"
+          onClick={() => setIsUploadOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="profile-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="upload-statement-title"
+          >
+            <h2 id="upload-statement-title">Upload Statement</h2>
+            <p>Choose the statement type you want to upload.</p>
+            <div className="profile-upload-options">
+              {uploadOptions.map((option) => (
+                <Link
+                  key={option.to}
+                  to={option.to}
+                  className="profile-action secondary"
+                  onClick={() => setIsUploadOpen(false)}
+                >
+                  {option.label}
+                </Link>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="profile-action"
+              onClick={() => setIsUploadOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
