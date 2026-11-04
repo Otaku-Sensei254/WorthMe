@@ -12,13 +12,7 @@ const horizonOptions = [
   { months: "12", label: "1 year" }, { months: "24", label: "2 years" }, { months: "60", label: "5 years" },
 ];
 
-const formatTargetDate = (months) => {
-  const date = new Date();
-  date.setDate(1);
-  date.setMonth(date.getMonth() + Number(months));
-  return new Intl.DateTimeFormat("en-KE", { month: "long", year: "numeric" }).format(date);
-};
-
+const formatStoredDate = (value) => new Intl.DateTimeFormat("en-KE", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${value}T00:00:00Z`));
 const targetDateAfterMonths = (months) => {
   const now = new Date();
   const date = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
@@ -34,7 +28,6 @@ const monthsUntilDate = (value) => {
   return Math.max(1, months + (target.getDate() > now.getDate() ? 1 : 0));
 };
 
-const formatStoredDate = (value) => new Intl.DateTimeFormat("en-KE", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${value}T00:00:00Z`));
 
 const GoalsView = () => {
   const { user } = useContext(UserContext);
