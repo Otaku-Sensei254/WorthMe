@@ -26,6 +26,14 @@ const targetDateAfterMonths = (months) => {
   return date.toISOString().slice(0, 10);
 };
 
+const monthsUntilDate = (value) => {
+  if (!value) return 12;
+  const target = new Date(`${value}T00:00:00`);
+  const now = new Date();
+  const months = (target.getFullYear() - now.getFullYear()) * 12 + target.getMonth() - now.getMonth();
+  return Math.max(1, months + (target.getDate() > now.getDate() ? 1 : 0));
+};
+
 const formatStoredDate = (value) => new Intl.DateTimeFormat("en-KE", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${value}T00:00:00Z`));
 
 const GoalsView = () => {
@@ -69,11 +77,14 @@ const GoalsView = () => {
     setSaving(true);
     setError("");
     try {
+      const selectedHorizon = form.horizon_months === "custom" ? form.custom_horizon : form.horizon_months;
+      const dueDate = form.target_date || targetDateAfterMonths(selectedHorizon || 12);
+      const horizonMonths = form.target_date ? monthsUntilDate(form.target_date) : Number(selectedHorizon || 12);
       const response = await fetch(`${API_BASE}/api/planning/goals${editingId ? `/${editingId}` : ""}`, {
         method: editingId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         credentials: "include",
-        body: JSON.stringify({ item: { ...form, target_amount: Number(form.target_amount), saved_amount: Number(form.saved_amount), horizon_months: Number(form.horizon_months === "custom" ? form.custom_horizon : form.horizon_months), target_date: form.target_date || targetDateAfterMonths(form.horizon_months === "custom" ? form.custom_horizon : form.horizon_months) } }),
+        body: JSON.stringify({ item: { ...form, target_amount: Number(form.target_amount), saved_amount: Number(form.saved_amount), horizon_months: horizonMonths, target_date: dueDate } }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.errors ? Object.values(data.errors).flat().join(" ") : data.error || "Could not save this goal.");
@@ -129,10 +140,9 @@ const GoalsView = () => {
           <label className="planning-field">Category<select value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })}>{goalCategories.map((category) => <option key={category}>{category}</option>)}</select></label>
           <label className="planning-field">Target amount<input required type="number" min="0.01" step="0.01" inputMode="decimal" placeholder="0.00" value={form.target_amount} onChange={(event) => setForm({ ...form, target_amount: event.target.value })} /></label>
           <label className="planning-field">Already saved<input type="number" min="0" step="0.01" inputMode="decimal" value={form.saved_amount} onChange={(event) => setForm({ ...form, saved_amount: event.target.value })} /></label>
-          <label className="planning-field">Target timeline<select value={form.horizon_months} onChange={(event) => { const months = event.target.value; setForm({ ...form, horizon_months: months, target_date: months === "custom" ? form.target_date : targetDateAfterMonths(months) }); }}>{horizonOptions.map((option) => <option key={option.months} value={option.months}>{option.label}</option>)}<option value="custom">Custom</option></select></label>
-          {form.horizon_months === "custom" && <label className="planning-field">Number of months<input required type="number" min="1" max="600" inputMode="numeric" placeholder="e.g. 18" value={form.custom_horizon || ""} onChange={(event) => { const months = event.target.value; setForm({ ...form, custom_horizon: months, horizon_months: "custom", target_date: months ? targetDateAfterMonths(months) : "" }); }} /></label>}
+          <label className="planning-field">Due date<input required type="date" min={new Date().toISOString().slice(0, 10)} value={form.target_date} onChange={(event) => setForm({ ...form, target_date: event.target.value, horizon_months: event.target.value ? "custom" : form.horizon_months, custom_horizon: event.target.value ? String(monthsUntilDate(event.target.value)) : form.custom_horizon })} /></label>
         </div>
-        {form.horizon_months === "custom" && <p className="planning-form-hint">Custom target: {form.custom_horizon ? formatTargetDate(form.custom_horizon) : "Choose a number of months"}</p>}
+        {form.target_date && <p className="planning-form-hint">Target date: {formatStoredDate(form.target_date)}</p>}
         <div className="planning-form-actions"><button className="planning-secondary-button" type="button" onClick={resetForm}>Cancel</button><button className="planning-primary-button" type="submit" disabled={saving || (form.horizon_months === "custom" && !form.custom_horizon)}>{saving ? "Saving…" : editingId ? "Save changes" : "Create goal"}</button></div>
       </form>}
 
