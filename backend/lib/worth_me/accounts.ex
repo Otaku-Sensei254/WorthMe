@@ -232,6 +232,16 @@ defmodule WorthMe.Accounts do
     token
   end
 
+  def update_user_phone(%User{} = user, phone) do
+    user
+    |> Ecto.Changeset.cast(%{phone: phone}, [:phone])
+    |> Ecto.Changeset.validate_required([:phone])
+    |> Ecto.Changeset.validate_format(:phone, ~r/^(\+?254)?[0-9]{9}$/,
+      message: "should be 9 digits (optionally prefixed with +254)"
+    )
+    |> Repo.update()
+  end
+
   @doc """
   Gets the user with the given signed token.
   """

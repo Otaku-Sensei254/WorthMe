@@ -14,6 +14,7 @@ import InitialPageLoader from "./Components/InitialPageLoader";
 import BankConnect from "./banks/BankConnect";
 import Profile from "./Components/Pages/Profile";
 import NeonAuthCallback from "./Components/Pages/NeonAuthCallback";
+import PhonePromptModal from "./Components/Auth/PhonePromptModal";
 // Context & Protection
 import { UserProvider } from "./context/userContext";
 import { WealthProvider } from "./context/wealthContext";
@@ -133,6 +134,7 @@ root.render(
       <WealthProvider>
         <>
           <RouterProvider router={router} />
+          <PhonePromptModal />
           <InitialPageLoader />
         </>
       </WealthProvider>

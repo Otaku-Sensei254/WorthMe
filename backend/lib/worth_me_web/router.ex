@@ -21,7 +21,7 @@ defmodule WorthMeWeb.Router do
   scope "/api", WorthMeWeb do
     pipe_through :api
 
-    get "/me", UserController, :show
+    put "/users/phone", UserController, :update_phone
     post "/statements", StatementController, :create
     get "/statements/latest", StatementController, :latest
     get "/balance-snapshots", BalanceSnapshotController, :index
