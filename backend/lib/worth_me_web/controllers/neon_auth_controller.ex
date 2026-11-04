@@ -82,7 +82,7 @@ defmodule WorthMeWeb.NeonAuthController do
       Enum.find_value(keys, fn key ->
         try do
           case JOSE.JWT.verify_strict(JOSE.JWK.from_map(key), ["EdDSA"], token) do
-            {true, jwt, _jws} -> JOSE.JWT.to_map(jwt)
+            {true, jwt, _jws} -> elem(JOSE.JWT.to_map(jwt), 1)
             _ -> nil
           end
         rescue
