@@ -6,9 +6,10 @@ import "../../styles/dashboard.css";
 const BudgetView = () => {
   const { spendingInsights } = useContext(WealthContext);
   const totalSpent = normalizeMoney(spendingInsights?.totalSpent || 0);
+  const totalReceived = normalizeMoney(spendingInsights?.totalReceived || 0);
 
-  // 50/30/20 Budgeting model estimates based on parsed spend
-  const estimatedIncome = totalSpent > 0 ? totalSpent * 1.3 : 150000;
+  // Budget targets are based on recorded income, with spend measured from parsed statements.
+  const estimatedIncome = totalReceived;
   const needsBudget = estimatedIncome * 0.5;
   const wantsBudget = estimatedIncome * 0.3;
   const savingsBudget = estimatedIncome * 0.2;
@@ -27,9 +28,9 @@ const BudgetView = () => {
 
       <div className="metric-strip">
         <div className="metric-box">
-          <span>Target Monthly Income</span>
+          <span>Recorded Monthly Income</span>
           <strong>Ksh {formatMoney(estimatedIncome)}</strong>
-          <small>Estimated baseline</small>
+          <small>From parsed statement inflows</small>
         </div>
         <div className="metric-box">
           <span>Current Month Outflow</span>
