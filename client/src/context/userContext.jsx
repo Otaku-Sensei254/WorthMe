@@ -37,7 +37,6 @@ export const UserProvider = ({ children }) => {
       // Phoenix returns the user object directly based on our UserController
       setUser(data);
       localStorage.setItem("user", JSON.stringify(data));
-      console.log("User session verified:", data);
     } catch (err) {
       // If the backend is down / network fails, keep whatever is in localStorage so
       // the app can still show cached statement results after refresh.
